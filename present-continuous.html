@@ -11,7 +11,6 @@
     <a class="back-link" href="index.html">Return to the list of tenses</a>
     <h1>Present Continuous Practice</h1>
     <p>Arrange the words to build the English sentence. Use the translation as your hint.</p>
-    <p class="practice-note">Попробуйте перевести вслух, потом собрать предложение.</p>
   </header>
   <main class="exercise-list" data-exercise-list></main>
   <template id="exercise-template">
@@ -20,17 +19,6 @@
         <span class="exercise-number"></span>
         <p class="exercise-translation"></p>
       </header>
-      <div class="word-workspace">
-        <div class="word-row">
-          <h2 class="sr-only">Доступные слова</h2>
-          <ul class="word-list word-list--bank" role="list" data-word-bank></ul>
-        </div>
-        <div class="word-row">
-          <h2 class="sr-only">Соберите предложение</h2>
-          <ul class="word-list word-list--sentence" role="list" data-sentence-area></ul>
-        </div>
-      </div>
-      <audio controls class="exercise-audio" hidden preload="auto"></audio>
       <div class="exercise-controls">
         <button type="button" class="reset-button">Reset</button>
         <button type="button" class="correct-button" hidden>correct</button>
@@ -144,48 +132,6 @@
 
     const supportsSpeech = 'speechSynthesis' in window;
 
-    function createWordItem(word) {
-      const item = document.createElement('li');
-      item.className = 'word-item';
-      item.textContent = word;
-      item.draggable = true;
-      item.dataset.word = word;
-      return item;
-    }
-
-    function getTtsUrl(text) {
-      const normalized = text.replace(/’/g, "'");
-      const encoded = encodeURIComponent(normalized);
-      return `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=tw-ob&q=${encoded}&tl=en`;
-    }
-
-    function hideAudio(audioEl) {
-      audioEl.pause();
-      audioEl.removeAttribute('src');
-      audioEl.load();
-      audioEl.hidden = true;
-    }
-
-    async function playSentence(sentence, audioEl) {
-      hideAudio(audioEl);
-      const url = getTtsUrl(sentence);
-      audioEl.src = url;
-      audioEl.hidden = false;
-      try {
-        await audioEl.play();
-      } catch (error) {
-        const autoplayBlocked = error && error.name === 'NotAllowedError';
-        if (!autoplayBlocked) {
-          hideAudio(audioEl);
-        }
-        if (supportsSpeech) {
-          const utterance = new SpeechSynthesisUtterance(sentence.replace(/’/g, "'"));
-          utterance.lang = 'en-US';
-          window.speechSynthesis.cancel();
-          window.speechSynthesis.speak(utterance);
-        }
-      }
-    }
 
     function shuffle(array) {
       const result = [...array];
@@ -196,91 +142,48 @@
       return result;
     }
 
+
     exercises.forEach((exercise, index) => {
       const clone = template.content.firstElementChild.cloneNode(true);
       const numberEl = clone.querySelector('.exercise-number');
       const translationEl = clone.querySelector('.exercise-translation');
-      const wordBank = clone.querySelector('[data-word-bank]');
-      const sentenceArea = clone.querySelector('[data-sentence-area]');
-      const resetButton = clone.querySelector('.reset-button');
-      const correctButton = clone.querySelector('.correct-button');
-      const audioElement = clone.querySelector('.exercise-audio');
+
 
       numberEl.textContent = `${index + 1}.`;
       translationEl.textContent = exercise.translation;
 
       const words = exercise.english.trim().split(/\s+/);
       const originalOrder = [...words];
-      let shuffledOrder = shuffle(words);
 
       let hasSpoken = false;
       let draggedItem = null;
 
       function renderWords(order) {
-        wordBank.innerHTML = '';
-        sentenceArea.innerHTML = '';
-        order.forEach((word) => {
-          wordBank.appendChild(createWordItem(word));
+
         });
         draggedItem = null;
       }
 
       renderWords(shuffledOrder);
 
-      function onDragStart(event) {
+
         const target = event.target.closest('.word-item');
         if (!target) return;
         draggedItem = target;
         target.classList.add('word-item--dragging');
-      }
 
-      function onDragEnd(event) {
         const target = event.target.closest('.word-item');
         if (target) {
           target.classList.remove('word-item--dragging');
         }
         draggedItem = null;
         checkOrder();
-      }
 
-      function handleListDragOver(event) {
-        event.preventDefault();
-        if (!draggedItem) return;
-
-        const list = event.currentTarget;
-        const target = event.target.closest('.word-item');
-
-        if (!target) {
-          list.appendChild(draggedItem);
-          return;
-        }
-
-        if (target === draggedItem) return;
-
-        const targetRect = target.getBoundingClientRect();
-        const isAfter = event.clientX > targetRect.left + targetRect.width / 2;
-        list.insertBefore(draggedItem, isAfter ? target.nextSibling : target);
-      }
-
-      function handleDrop(event) {
-        event.preventDefault();
-        checkOrder();
-      }
-
-      [wordBank, sentenceArea].forEach((list) => {
-        list.addEventListener('dragstart', onDragStart);
-        list.addEventListener('dragend', onDragEnd);
-        list.addEventListener('dragover', handleListDragOver);
-        list.addEventListener('drop', handleDrop);
-      });
-
-      resetButton.addEventListener('click', () => {
-        shuffledOrder = shuffle(originalOrder);
         renderWords(shuffledOrder);
         hasSpoken = false;
         correctButton.hidden = true;
         clone.classList.remove('exercise-card--complete');
-        hideAudio(audioElement);
+<
       });
 
       correctButton.addEventListener('click', () => {
@@ -288,28 +191,26 @@
       });
 
       function checkOrder() {
-        const current = Array.from(sentenceArea.children).map((item) => item.dataset.word);
+
         const isCorrect = current.length === originalOrder.length && current.every((word, i) => word === originalOrder[i]);
         if (isCorrect) {
           clone.classList.add('exercise-card--complete');
           correctButton.hidden = false;
           if (!hasSpoken) {
-            playSentence(exercise.english, audioElement);
+
             hasSpoken = true;
           }
         } else {
           clone.classList.remove('exercise-card--complete');
           correctButton.hidden = true;
           hasSpoken = false;
-          hideAudio(audioElement);
+
         }
       }
 
       container.appendChild(clone);
     });
   </script>
-  <footer class="practice-footer">
-    <a class="back-link" href="index.html">Return to the list of tenses</a>
-  </footer>
+
 </body>
 </html>

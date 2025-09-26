@@ -124,11 +124,6 @@ body {
   font-size: clamp(1rem, 2.4vw, 1.3rem);
 }
 
-.practice-note {
-  margin-top: 0.75rem;
-  font-size: clamp(0.95rem, 2vw, 1.2rem);
-  color: var(--accent);
-}
 
 .back-link {
   display: inline-flex;
@@ -174,31 +169,6 @@ body {
   box-shadow: 0 24px 45px rgba(0, 0, 0, 0.45);
 }
 
-.word-workspace {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.word-row {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.word-list--bank,
-.word-list--sentence {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  padding-bottom: 0.25rem;
-}
-
-.word-list--sentence {
-  min-height: 3.5rem;
-  flex-wrap: wrap;
-  overflow-x: visible;
-}
 
 .exercise-header {
   display: flex;
@@ -252,9 +222,6 @@ body {
   cursor: grabbing;
 }
 
-.word-list--bank .word-item {
-  white-space: nowrap;
-}
 
 .exercise-controls {
   display: flex;
@@ -263,28 +230,7 @@ body {
   margin-top: 1.25rem;
 }
 
-.exercise-audio {
-  width: 100%;
-  margin-top: 1rem;
-}
-
-.practice-footer {
-  display: flex;
-  justify-content: center;
-  padding: 2rem 1rem 3rem;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
-
+<
 .reset-button,
 .correct-button {
   padding: 0.55rem 1.2rem;
