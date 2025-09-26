@@ -8,12 +8,14 @@
 </head>
 <body class="practice-page">
   <header class="practice-header">
-
+    <a class="back-link" href="index.html">Return to the list of tenses</a>
     <h1>Present Continuous Practice</h1>
-    <p class="practice-instruction">Попробуйте перевести вслух, потом собрать предложение.</p>
     <p>Arrange the words to build the English sentence. Use the translation as your hint.</p>
+    <p class="practice-subtext">Попробуйте перевести вслух, потом собрать предложение.</p>
   </header>
+
   <main class="exercise-list" data-exercise-list></main>
+
   <footer class="practice-footer">
     <a class="back-link" href="index.html">Return to the list of tenses</a>
   </footer>
@@ -24,23 +26,27 @@
         <span class="exercise-number"></span>
         <p class="exercise-translation"></p>
       </header>
-
-      <div class="word-rails">
-        <ul class="word-list word-list--bank" aria-label="Word bank" role="list"></ul>
-        <ul
-          class="word-list word-list--sentence"
-          aria-label="Sentence builder"
-          data-placeholder="Перетащите слова сюда"
-          role="list"
-        ></ul>
+      <div class="sentence-builder">
+        <div class="word-bank">
+          <ul class="word-row" data-word-bank role="list" aria-label="Набор слов"></ul>
+        </div>
+        <div class="sentence-drop">
+          <ul
+            class="sentence-row"
+            data-sentence-line
+            role="list"
+            aria-label="Соберите предложение"
+            data-placeholder="Перетащите слова сюда"
+          ></ul>
+        </div>
       </div>
-
       <div class="exercise-controls">
         <button type="button" class="reset-button">Reset</button>
-        <button type="button" class="correct-button" hidden>correct</button>
+        <button type="button" class="correct-button" hidden>Correct</button>
       </div>
     </article>
   </template>
+
   <script>
     const exercises = [
       { english: "I’m working.", translation: "Я работаю." },
@@ -145,9 +151,7 @@
 
     const template = document.getElementById('exercise-template');
     const container = document.querySelector('[data-exercise-list]');
-
     const supportsSpeech = 'speechSynthesis' in window;
-
 
     function shuffle(array) {
       const result = [...array];
@@ -158,7 +162,6 @@
       return result;
     }
 
-
     function speakSentence(sentence) {
       if (!supportsSpeech) return;
       const utterance = new SpeechSynthesisUtterance(sentence.replace(/’/g, "'"));
@@ -167,111 +170,131 @@
       window.speechSynthesis.speak(utterance);
     }
 
-
     exercises.forEach((exercise, index) => {
       const clone = template.content.firstElementChild.cloneNode(true);
       const numberEl = clone.querySelector('.exercise-number');
       const translationEl = clone.querySelector('.exercise-translation');
-
-      const bankList = clone.querySelector('.word-list--bank');
-      const sentenceList = clone.querySelector('.word-list--sentence');
+      const wordBank = clone.querySelector('[data-word-bank]');
+      const sentenceLine = clone.querySelector('[data-sentence-line]');
       const resetButton = clone.querySelector('.reset-button');
       const correctButton = clone.querySelector('.correct-button');
-
 
       numberEl.textContent = `${index + 1}.`;
       translationEl.textContent = exercise.translation;
 
-      const words = exercise.english.trim().split(/\s+/);
-      const originalOrder = [...words];
-
-      const shuffledOrder = shuffle(words);
-
+      const tokens = exercise.english
+        .trim()
+        .split(/\s+/)
+        .map((word, wordIndex) => ({
+          word,
+          index: wordIndex,
+          id: `${index}-${wordIndex}`,
+        }));
+      let shuffledTokens = shuffle(tokens);
 
       let hasSpoken = false;
       let draggedItem = null;
 
-
-      function createWordItem(word) {
+      function createWordElement(token) {
         const item = document.createElement('li');
         item.className = 'word-item';
-        item.textContent = word;
+        item.textContent = token.word;
         item.draggable = true;
-        item.dataset.word = word;
+        item.dataset.tokenId = token.id;
+        item.dataset.originalIndex = token.index;
         return item;
       }
 
-      function renderWordBank(order) {
-        bankList.innerHTML = '';
-        sentenceList.innerHTML = '';
-        order.forEach((word) => {
-          bankList.appendChild(createWordItem(word));
-
+      function renderInitialState() {
+        wordBank.innerHTML = '';
+        sentenceLine.innerHTML = '';
+        shuffledTokens.forEach((token) => {
+          wordBank.appendChild(createWordElement(token));
         });
+        hasSpoken = false;
+        correctButton.hidden = true;
+        clone.classList.remove('exercise-card--complete');
         draggedItem = null;
+        if (supportsSpeech) {
+          window.speechSynthesis.cancel();
+        }
       }
 
+      renderInitialState();
 
-      renderWordBank(shuffledOrder);
-
-      clone.addEventListener('dragstart', (event) => {
+      function handleDragStart(event) {
         const target = event.target.closest('.word-item');
         if (!target) return;
         draggedItem = target;
-        event.dataTransfer.effectAllowed = 'move';
-        event.dataTransfer.setData('text/plain', target.dataset.word);
-        requestAnimationFrame(() => {
-          target.classList.add('word-item--dragging');
-        });
-      });
+        target.classList.add('word-item--dragging');
+        if (event.dataTransfer) {
+          event.dataTransfer.effectAllowed = 'move';
+          event.dataTransfer.setData('text/plain', target.dataset.tokenId);
+        }
+      }
 
-      clone.addEventListener('dragend', (event) => {
+      function handleDragOver(event) {
+        if (!draggedItem) return;
+        event.preventDefault();
+        if (event.dataTransfer) {
+          event.dataTransfer.dropEffect = 'move';
+        }
+        const list = event.currentTarget;
+        const target = event.target.closest('.word-item');
+        if (!target || target === draggedItem) {
+          if (!target) {
+            list.appendChild(draggedItem);
+          }
+          return;
+        }
+        const { left, width } = target.getBoundingClientRect();
+        const insertAfter = event.clientX > left + width / 2;
+        if (insertAfter) {
+          list.insertBefore(draggedItem, target.nextSibling);
+        } else {
+          list.insertBefore(draggedItem, target);
+        }
+      }
 
+      function handleDrop(event) {
+        if (!draggedItem) return;
+        event.preventDefault();
+        const list = event.currentTarget;
+        const target = event.target.closest('.word-item');
+        if (!target || target === draggedItem) {
+          if (!target) {
+            list.appendChild(draggedItem);
+          }
+        } else {
+          const { left, width } = target.getBoundingClientRect();
+          const insertAfter = event.clientX > left + width / 2;
+          if (insertAfter) {
+            list.insertBefore(draggedItem, target.nextSibling);
+          } else {
+            list.insertBefore(draggedItem, target);
+          }
+        }
+        checkOrder();
+      }
+
+      function handleDragEnd(event) {
         const target = event.target.closest('.word-item');
         if (target) {
           target.classList.remove('word-item--dragging');
         }
         draggedItem = null;
-        checkOrder();
+      }
 
-      });
-
-      [bankList, sentenceList].forEach((list) => {
-        list.addEventListener('dragover', (event) => {
-          if (!draggedItem) return;
-          event.preventDefault();
-        });
-
-        list.addEventListener('drop', (event) => {
-          if (!draggedItem) return;
-          event.preventDefault();
-          const target = event.target.closest('.word-item');
-          const listElement = list;
-
-          if (!target || target === draggedItem) {
-            listElement.appendChild(draggedItem);
-          } else {
-            const rect = target.getBoundingClientRect();
-            const isAfter = event.clientY > rect.top + rect.height / 2;
-            if (isAfter) {
-              listElement.insertBefore(draggedItem, target.nextSibling);
-            } else {
-              listElement.insertBefore(draggedItem, target);
-            }
-          }
-
-          draggedItem.classList.remove('word-item--dragging');
-          draggedItem = null;
-          checkOrder();
-        });
+      [wordBank, sentenceLine].forEach((list) => {
+        list.addEventListener('dragstart', handleDragStart);
+        list.addEventListener('dragover', handleDragOver);
+        list.addEventListener('drop', handleDrop);
+        list.addEventListener('dragend', handleDragEnd);
       });
 
       resetButton.addEventListener('click', () => {
-        renderWordBank(shuffledOrder);
-        hasSpoken = false;
-        correctButton.hidden = true;
-        clone.classList.remove('exercise-card--complete');
-
+        shuffledTokens = shuffle(tokens);
+        renderInitialState();
       });
 
       correctButton.addEventListener('click', () => {
@@ -279,31 +302,26 @@
       });
 
       function checkOrder() {
+        const current = Array.from(sentenceLine.children).map((item) => Number(item.dataset.originalIndex));
+        const isComplete = current.length === tokens.length;
+        const isCorrect = isComplete && current.every((position, i) => position === i);
 
-        const current = Array.from(sentenceList.children).map((item) => item.dataset.word);
-        const isCorrect =
-          current.length === originalOrder.length && current.every((word, i) => word === originalOrder[i]);
-in
         if (isCorrect) {
           clone.classList.add('exercise-card--complete');
           correctButton.hidden = false;
           if (!hasSpoken) {
-
             speakSentence(exercise.english);
-
             hasSpoken = true;
           }
         } else {
           clone.classList.remove('exercise-card--complete');
           correctButton.hidden = true;
           hasSpoken = false;
-
         }
       }
 
       container.appendChild(clone);
     });
   </script>
-
 </body>
 </html>
