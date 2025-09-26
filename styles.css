@@ -129,6 +129,15 @@ body {
   font-size: clamp(0.95rem, 2vw, 1.15rem);
 }
 
+.practice-footer {
+  text-align: center;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.practice-footer .back-link {
+  font-size: 1rem;
+}
+
 .back-link {
   display: inline-flex;
   align-items: center;
@@ -305,15 +314,6 @@ body {
 .correct-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 16px 24px rgba(141, 212, 255, 0.5);
-}
-
-.practice-footer {
-  text-align: center;
-  padding: 1.5rem 1rem 3rem;
-}
-
-.practice-footer .back-link {
-  font-size: 1rem;
 }
 
 @media (max-width: 640px) {

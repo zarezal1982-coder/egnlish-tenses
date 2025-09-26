@@ -13,7 +13,13 @@
     <p>Arrange the words to build the English sentence. Use the translation as your hint.</p>
     <p class="practice-subtext">Попробуйте перевести вслух, потом собрать предложение.</p>
   </header>
+
   <main class="exercise-list" data-exercise-list></main>
+
+  <footer class="practice-footer">
+    <a class="back-link" href="index.html">Return to the list of tenses</a>
+  </footer>
+
   <template id="exercise-template">
     <article class="exercise-card">
       <header class="exercise-header">
@@ -36,13 +42,11 @@
       </div>
       <div class="exercise-controls">
         <button type="button" class="reset-button">Reset</button>
-        <button type="button" class="correct-button" hidden>correct</button>
+        <button type="button" class="correct-button" hidden>Correct</button>
       </div>
     </article>
   </template>
-  <footer class="practice-footer">
-    <a class="back-link" href="index.html">Return to the list of tenses</a>
-  </footer>
+
   <script>
     const exercises = [
       { english: "I’m working.", translation: "Я работаю." },
@@ -147,7 +151,6 @@
 
     const template = document.getElementById('exercise-template');
     const container = document.querySelector('[data-exercise-list]');
-
     const supportsSpeech = 'speechSynthesis' in window;
 
     function shuffle(array) {
@@ -302,6 +305,7 @@
         const current = Array.from(sentenceLine.children).map((item) => Number(item.dataset.originalIndex));
         const isComplete = current.length === tokens.length;
         const isCorrect = isComplete && current.every((position, i) => position === i);
+
         if (isCorrect) {
           clone.classList.add('exercise-card--complete');
           correctButton.hidden = false;
