@@ -8,17 +8,33 @@
 </head>
 <body class="practice-page">
   <header class="practice-header">
-    <a class="back-link" href="index.html">Return to the list of tenses</a>
+
     <h1>Present Continuous Practice</h1>
+    <p class="practice-instruction">Попробуйте перевести вслух, потом собрать предложение.</p>
     <p>Arrange the words to build the English sentence. Use the translation as your hint.</p>
   </header>
   <main class="exercise-list" data-exercise-list></main>
+  <footer class="practice-footer">
+    <a class="back-link" href="index.html">Return to the list of tenses</a>
+  </footer>
+
   <template id="exercise-template">
     <article class="exercise-card">
       <header class="exercise-header">
         <span class="exercise-number"></span>
         <p class="exercise-translation"></p>
       </header>
+
+      <div class="word-rails">
+        <ul class="word-list word-list--bank" aria-label="Word bank" role="list"></ul>
+        <ul
+          class="word-list word-list--sentence"
+          aria-label="Sentence builder"
+          data-placeholder="Перетащите слова сюда"
+          role="list"
+        ></ul>
+      </div>
+
       <div class="exercise-controls">
         <button type="button" class="reset-button">Reset</button>
         <button type="button" class="correct-button" hidden>correct</button>
@@ -143,10 +159,24 @@
     }
 
 
+    function speakSentence(sentence) {
+      if (!supportsSpeech) return;
+      const utterance = new SpeechSynthesisUtterance(sentence.replace(/’/g, "'"));
+      utterance.lang = 'en-US';
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    }
+
+
     exercises.forEach((exercise, index) => {
       const clone = template.content.firstElementChild.cloneNode(true);
       const numberEl = clone.querySelector('.exercise-number');
       const translationEl = clone.querySelector('.exercise-translation');
+
+      const bankList = clone.querySelector('.word-list--bank');
+      const sentenceList = clone.querySelector('.word-list--sentence');
+      const resetButton = clone.querySelector('.reset-button');
+      const correctButton = clone.querySelector('.correct-button');
 
 
       numberEl.textContent = `${index + 1}.`;
@@ -155,22 +185,47 @@
       const words = exercise.english.trim().split(/\s+/);
       const originalOrder = [...words];
 
+      const shuffledOrder = shuffle(words);
+
+
       let hasSpoken = false;
       let draggedItem = null;
 
-      function renderWords(order) {
+
+      function createWordItem(word) {
+        const item = document.createElement('li');
+        item.className = 'word-item';
+        item.textContent = word;
+        item.draggable = true;
+        item.dataset.word = word;
+        return item;
+      }
+
+      function renderWordBank(order) {
+        bankList.innerHTML = '';
+        sentenceList.innerHTML = '';
+        order.forEach((word) => {
+          bankList.appendChild(createWordItem(word));
 
         });
         draggedItem = null;
       }
 
-      renderWords(shuffledOrder);
 
+      renderWordBank(shuffledOrder);
 
+      clone.addEventListener('dragstart', (event) => {
         const target = event.target.closest('.word-item');
         if (!target) return;
         draggedItem = target;
-        target.classList.add('word-item--dragging');
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', target.dataset.word);
+        requestAnimationFrame(() => {
+          target.classList.add('word-item--dragging');
+        });
+      });
+
+      clone.addEventListener('dragend', (event) => {
 
         const target = event.target.closest('.word-item');
         if (target) {
@@ -179,11 +234,44 @@
         draggedItem = null;
         checkOrder();
 
-        renderWords(shuffledOrder);
+      });
+
+      [bankList, sentenceList].forEach((list) => {
+        list.addEventListener('dragover', (event) => {
+          if (!draggedItem) return;
+          event.preventDefault();
+        });
+
+        list.addEventListener('drop', (event) => {
+          if (!draggedItem) return;
+          event.preventDefault();
+          const target = event.target.closest('.word-item');
+          const listElement = list;
+
+          if (!target || target === draggedItem) {
+            listElement.appendChild(draggedItem);
+          } else {
+            const rect = target.getBoundingClientRect();
+            const isAfter = event.clientY > rect.top + rect.height / 2;
+            if (isAfter) {
+              listElement.insertBefore(draggedItem, target.nextSibling);
+            } else {
+              listElement.insertBefore(draggedItem, target);
+            }
+          }
+
+          draggedItem.classList.remove('word-item--dragging');
+          draggedItem = null;
+          checkOrder();
+        });
+      });
+
+      resetButton.addEventListener('click', () => {
+        renderWordBank(shuffledOrder);
         hasSpoken = false;
         correctButton.hidden = true;
         clone.classList.remove('exercise-card--complete');
-<
+
       });
 
       correctButton.addEventListener('click', () => {
@@ -192,11 +280,16 @@
 
       function checkOrder() {
 
-        const isCorrect = current.length === originalOrder.length && current.every((word, i) => word === originalOrder[i]);
+        const current = Array.from(sentenceList.children).map((item) => item.dataset.word);
+        const isCorrect =
+          current.length === originalOrder.length && current.every((word, i) => word === originalOrder[i]);
+in
         if (isCorrect) {
           clone.classList.add('exercise-card--complete');
           correctButton.hidden = false;
           if (!hasSpoken) {
+
+            speakSentence(exercise.english);
 
             hasSpoken = true;
           }
