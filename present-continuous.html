@@ -19,7 +19,6 @@
         <span class="exercise-number"></span>
         <p class="exercise-translation"></p>
       </header>
-      <ul class="word-list" role="list"></ul>
       <div class="exercise-controls">
         <button type="button" class="reset-button">Reset</button>
         <button type="button" class="correct-button" hidden>correct</button>
@@ -133,6 +132,7 @@
 
     const supportsSpeech = 'speechSynthesis' in window;
 
+
     function shuffle(array) {
       const result = [...array];
       for (let i = result.length - 1; i > 0; i -= 1) {
@@ -142,96 +142,48 @@
       return result;
     }
 
-    function speakSentence(sentence) {
-      if (!supportsSpeech) return;
-      const utterance = new SpeechSynthesisUtterance(sentence.replace(/’/g, "'"));
-      utterance.lang = 'en-US';
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
-    }
 
     exercises.forEach((exercise, index) => {
       const clone = template.content.firstElementChild.cloneNode(true);
       const numberEl = clone.querySelector('.exercise-number');
       const translationEl = clone.querySelector('.exercise-translation');
-      const wordList = clone.querySelector('.word-list');
-      const resetButton = clone.querySelector('.reset-button');
-      const correctButton = clone.querySelector('.correct-button');
+
 
       numberEl.textContent = `${index + 1}.`;
       translationEl.textContent = exercise.translation;
 
       const words = exercise.english.trim().split(/\s+/);
       const originalOrder = [...words];
-      const shuffledOrder = shuffle(words);
 
       let hasSpoken = false;
       let draggedItem = null;
 
       function renderWords(order) {
-        wordList.innerHTML = '';
-        order.forEach((word) => {
-          const item = document.createElement('li');
-          item.className = 'word-item';
-          item.textContent = word;
-          item.draggable = true;
-          item.dataset.word = word;
-          wordList.appendChild(item);
+
         });
         draggedItem = null;
       }
 
       renderWords(shuffledOrder);
 
-      wordList.addEventListener('dragstart', (event) => {
+
         const target = event.target.closest('.word-item');
         if (!target) return;
         draggedItem = target;
         target.classList.add('word-item--dragging');
-      });
 
-      wordList.addEventListener('dragend', (event) => {
         const target = event.target.closest('.word-item');
         if (target) {
           target.classList.remove('word-item--dragging');
         }
         draggedItem = null;
         checkOrder();
-      });
 
-      wordList.addEventListener('dragover', (event) => {
-        event.preventDefault();
-        const target = event.target.closest('.word-item');
-        if (!draggedItem) return;
-
-        if (!target) {
-          wordList.appendChild(draggedItem);
-          return;
-        }
-
-        if (draggedItem === target) return;
-
-        const items = Array.from(wordList.children);
-        const draggedIndex = items.indexOf(draggedItem);
-        const targetIndex = items.indexOf(target);
-
-        if (draggedIndex < targetIndex) {
-          wordList.insertBefore(draggedItem, target.nextSibling);
-        } else {
-          wordList.insertBefore(draggedItem, target);
-        }
-      });
-
-      wordList.addEventListener('drop', (event) => {
-        event.preventDefault();
-        checkOrder();
-      });
-
-      resetButton.addEventListener('click', () => {
         renderWords(shuffledOrder);
         hasSpoken = false;
         correctButton.hidden = true;
         clone.classList.remove('exercise-card--complete');
+<
       });
 
       correctButton.addEventListener('click', () => {
@@ -239,24 +191,26 @@
       });
 
       function checkOrder() {
-        const current = Array.from(wordList.children).map((item) => item.dataset.word);
+
         const isCorrect = current.length === originalOrder.length && current.every((word, i) => word === originalOrder[i]);
         if (isCorrect) {
           clone.classList.add('exercise-card--complete');
           correctButton.hidden = false;
           if (!hasSpoken) {
-            speakSentence(exercise.english);
+
             hasSpoken = true;
           }
         } else {
           clone.classList.remove('exercise-card--complete');
           correctButton.hidden = true;
           hasSpoken = false;
+
         }
       }
 
       container.appendChild(clone);
     });
   </script>
+
 </body>
 </html>
