@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Present Continuous Practice</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="practice-page">
+  <header class="practice-header">
+    <a class="back-link" href="index.html">Return to the list of tenses</a>
+    <h1>Present Continuous Practice</h1>
+    <p>Arrange the words to build the English sentence. Use the translation as your hint.</p>
+    <p class="practice-subtext">Попробуйте перевести вслух, потом собрать предложение.</p>
+  </header>
+  <main class="exercise-list" data-exercise-list></main>
+  <template id="exercise-template">
+    <article class="exercise-card">
+      <header class="exercise-header">
+        <span class="exercise-number"></span>
+        <p class="exercise-translation"></p>
+      </header>
+      <div class="sentence-builder">
+        <div class="word-bank">
+          <ul class="word-row" data-word-bank role="list" aria-label="Набор слов"></ul>
+        </div>
+        <div class="sentence-drop">
+          <ul
+            class="sentence-row"
+            data-sentence-line
+            role="list"
+            aria-label="Соберите предложение"
+            data-placeholder="Перетащите слова сюда"
+          ></ul>
+        </div>
+      </div>
+      <div class="exercise-controls">
+        <button type="button" class="reset-button">Reset</button>
+        <button type="button" class="correct-button" hidden>correct</button>
+      </div>
+    </article>
+  </template>
+  <footer class="practice-footer">
+    <a class="back-link" href="index.html">Return to the list of tenses</a>
+  </footer>
+  <script>
+    const exercises = [
+      { english: "I’m working.", translation: "Я работаю." },
+      { english: "I’m not watching TV.", translation: "Я не смотрю телевизор." },
+      { english: "Maria is reading a newspaper.", translation: "Мария читает газету." },
+      { english: "She isn’t eating.", translation: "Она не ест." },
+      { english: "She’s not eating.", translation: "Она не ест." },
+      { english: "The bus is coming.", translation: "Автобус подъезжает." },
+      { english: "We’re having dinner.", translation: "Мы ужинаем." },
+      { english: "You’re not listening to me.", translation: "Ты меня не слушаешь." },
+      { english: "You aren’t listening to me.", translation: "Ты меня не слушаешь." },
+      { english: "The children are doing their homework.", translation: "Дети делают домашнюю работу." },
+      { english: "Please be quiet.", translation: "Пожалуйста, будьте тише." },
+      { english: "I’m working now.", translation: "Я сейчас работаю." },
+      { english: "Look, there’s Sarah.", translation: "Смотри, вон Сара." },
+      { english: "She’s wearing a brown coat.", translation: "На ней коричневое пальто." },
+      { english: "The weather is nice.", translation: "Погода хорошая." },
+      { english: "It’s not raining.", translation: "Дождя нет." },
+      { english: "Where are the children?", translation: "Где дети?" },
+      { english: "They’re playing in the park.", translation: "Они играют в парке." },
+      { english: "We’re having dinner now.", translation: "Мы сейчас ужинаем." },
+      { english: "Can I call you later?", translation: "Можно я перезвоню позже?" },
+      { english: "You can turn off the television.", translation: "Ты можешь выключить телевизор." },
+      { english: "I’m not watching it.", translation: "Я его не смотрю." },
+      { english: "She’s eating an apple.", translation: "Она ест яблоко." },
+      { english: "He is waiting for a bus.", translation: "Он ждёт автобус." },
+      { english: "They are playing football.", translation: "Они играют в футбол." },
+      { english: "He is lying on the floor.", translation: "Он лежит на полу." },
+      { english: "They are having breakfast.", translation: "Они завтракают." },
+      { english: "She is sitting on the table.", translation: "Она сидит на столе." },
+      { english: "He’s cooking.", translation: "Он готовит." },
+      { english: "You are standing on my foot.", translation: "Ты наступил мне на ногу." },
+      { english: "Oh, I’m sorry!", translation: "Ой, прости!" },
+      { english: "Look! Somebody is swimming in the river.", translation: "Смотри! Кто-то плывёт в реке." },
+      { english: "We’re here on holiday.", translation: "Мы здесь в отпуске." },
+      { english: "We’re staying at the Central Hotel.", translation: "Мы остановились в гостинице «Сентрал»." },
+      { english: "Where’s Sue?", translation: "Где Сью?" },
+      { english: "She’s having a shower.", translation: "Она принимает душ." },
+      { english: "They’re building a new hotel in the city centre at the moment.", translation: "Сейчас они строят новый отель в центре города." },
+      { english: "I’m going now.", translation: "Я ухожу." },
+      { english: "Goodbye.", translation: "До свидания." },
+      { english: "Jane isn’t having dinner.", translation: "Джейн не ужинает." },
+      { english: "Jane’s watching TV.", translation: "Джейн смотрит телевизор." },
+      { english: "She isn’t sitting on the floor.", translation: "Она не сидит на полу." },
+      { english: "She isn’t reading a book.", translation: "Она не читает книгу." },
+      { english: "She isn’t playing the piano.", translation: "Она не играет на пианино." },
+      { english: "She’s laughing.", translation: "Она смеётся." },
+      { english: "She’s wearing a hat.", translation: "На ней шляпа." },
+      { english: "She isn’t drinking coffee.", translation: "Она не пьёт кофе." },
+      { english: "Kate wants to work in Italy, so she’s learning Italian.", translation: "Кейт хочет работать в Италии, поэтому она учит итальянский." },
+      { english: "Some friends of mine are building their own house.", translation: "Некоторые мои друзья строят свой дом." },
+      { english: "They hope to finish it next summer.", translation: "Они надеются закончить его следующим летом." },
+      { english: "You’re working hard today.", translation: "Ты сегодня усердно работаешь." },
+      { english: "Yes, I have a lot to do.", translation: "Да, у меня много дел." },
+      { english: "The company I work for isn’t doing so well this year.", translation: "Компания, в которой я работаю, в этом году дела ведёт не очень хорошо." },
+      { english: "Is your English getting better?", translation: "Твой английский улучшается?" },
+      { english: "The population of the world is increasing very fast.", translation: "Население мира очень быстро растёт." },
+      { english: "At first I didn’t like my job, but I’m beginning to enjoy it now.", translation: "Сначала мне не нравилась моя работа, но сейчас она начинает мне нравиться." },
+      { english: "Please don’t make so much noise.", translation: "Пожалуйста, не шумите так сильно." },
+      { english: "It’s getting late.", translation: "Становится поздно." },
+      { english: "I need to eat something soon.", translation: "Мне скоро нужно что-нибудь поесть." },
+      { english: "I’m getting hungry.", translation: "Я начинаю голодать." },
+      { english: "I don’t have anywhere to live right now.", translation: "Мне сейчас негде жить." },
+      { english: "I’m looking for an apartment.", translation: "Я ищу квартиру." },
+      { english: "We need to leave soon.", translation: "Нам нужно скоро уходить." },
+      { english: "It’s starting to rain.", translation: "Начинается дождь." },
+      { english: "They don’t need their car any more.", translation: "Им больше не нужна их машина." },
+      { english: "They’re trying to sell it.", translation: "Они пытаются её продать." },
+      { english: "Things are not so good at work.", translation: "На работе дела идут не очень хорошо." },
+      { english: "The company is losing money.", translation: "Компания теряет деньги." },
+      { english: "It isn’t true what they said.", translation: "То, что они сказали, неправда." },
+      { english: "They’re lying.", translation: "Они лгут." },
+      { english: "We’re going to get wet.", translation: "Мы промокнем." },
+      { english: "It’s starting to rain.", translation: "Начинается дождь." },
+      { english: "I’m trying to work.", translation: "Я пытаюсь работать." },
+      { english: "Let’s go out now.", translation: "Давай выйдем сейчас." },
+      { english: "It isn’t raining any more.", translation: "Дождь больше не идёт." },
+      { english: "You can turn off the radio.", translation: "Ты можешь выключить радио." },
+      { english: "I’m not listening to it.", translation: "Я его не слушаю." },
+      { english: "Kate phoned me last night.", translation: "Кейт позвонила мне прошлой ночью." },
+      { english: "She’s on holiday in France.", translation: "Она в отпуске во Франции." },
+      { english: "She’s having a great time and doesn’t want to come back.", translation: "Она прекрасно проводит время и не хочет возвращаться." },
+      { english: "I want to lose weight, so this week I’m not eating lunch.", translation: "Я хочу похудеть, поэтому на этой неделе я не обедаю." },
+      { english: "Andrew has just started evening classes.", translation: "Эндрю только что начал вечерние занятия." },
+      { english: "He’s learning Japanese.", translation: "Он изучает японский." },
+      { english: "Paul and Sally have had an argument.", translation: "Пол и Салли поссорились." },
+      { english: "They aren’t speaking to each other.", translation: "Они не разговаривают друг с другом." },
+      { english: "I’m getting tired.", translation: "Я устаю." },
+      { english: "I need a rest.", translation: "Мне нужен отдых." },
+      { english: "Tim isn’t working today.", translation: "Тим сегодня не работает." },
+      { english: "He’s taken the day off.", translation: "Он взял выходной." },
+      { english: "I’m looking for Sophie.", translation: "Я ищу Софи." },
+      { english: "Do you know where she is?", translation: "Ты знаешь, где она?" },
+      { english: "The world is changing.", translation: "Мир меняется." },
+      { english: "Things never stay the same.", translation: "Ничто не остаётся прежним." },
+      { english: "The situation is already bad and it is getting worse.", translation: "Ситуация уже плохая, и она становится ещё хуже." },
+      { english: "The cost of living is rising.", translation: "Стоимость жизни растёт." },
+      { english: "Every year things are more expensive.", translation: "Каждый год всё становится дороже." },
+      { english: "The weather is starting to improve.", translation: "Погода начинает улучшаться." },
+      { english: "The rain has stopped, and the wind isn’t as strong.", translation: "Дождь прекратился, и ветер уже не такой сильный." }
+    ];
+
+    const template = document.getElementById('exercise-template');
+    const container = document.querySelector('[data-exercise-list]');
+
+    const supportsSpeech = 'speechSynthesis' in window;
+
+    function shuffle(array) {
+      const result = [...array];
+      for (let i = result.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
+    }
+
+    function speakSentence(sentence) {
+      if (!supportsSpeech) return;
+      const utterance = new SpeechSynthesisUtterance(sentence.replace(/’/g, "'"));
+      utterance.lang = 'en-US';
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    }
+
+    exercises.forEach((exercise, index) => {
+      const clone = template.content.firstElementChild.cloneNode(true);
+      const numberEl = clone.querySelector('.exercise-number');
+      const translationEl = clone.querySelector('.exercise-translation');
+      const wordBank = clone.querySelector('[data-word-bank]');
+      const sentenceLine = clone.querySelector('[data-sentence-line]');
+      const resetButton = clone.querySelector('.reset-button');
+      const correctButton = clone.querySelector('.correct-button');
+
+      numberEl.textContent = `${index + 1}.`;
+      translationEl.textContent = exercise.translation;
+
+      const tokens = exercise.english
+        .trim()
+        .split(/\s+/)
+        .map((word, wordIndex) => ({
+          word,
+          index: wordIndex,
+          id: `${index}-${wordIndex}`,
+        }));
+      let shuffledTokens = shuffle(tokens);
+
+      let hasSpoken = false;
+      let draggedItem = null;
+
+      function createWordElement(token) {
+        const item = document.createElement('li');
+        item.className = 'word-item';
+        item.textContent = token.word;
+        item.draggable = true;
+        item.dataset.tokenId = token.id;
+        item.dataset.originalIndex = token.index;
+        return item;
+      }
+
+      function renderInitialState() {
+        wordBank.innerHTML = '';
+        sentenceLine.innerHTML = '';
+        shuffledTokens.forEach((token) => {
+          wordBank.appendChild(createWordElement(token));
+        });
+        hasSpoken = false;
+        correctButton.hidden = true;
+        clone.classList.remove('exercise-card--complete');
+        draggedItem = null;
+        if (supportsSpeech) {
+          window.speechSynthesis.cancel();
+        }
+      }
+
+      renderInitialState();
+
+      function handleDragStart(event) {
+        const target = event.target.closest('.word-item');
+        if (!target) return;
+        draggedItem = target;
+        target.classList.add('word-item--dragging');
+        if (event.dataTransfer) {
+          event.dataTransfer.effectAllowed = 'move';
+          event.dataTransfer.setData('text/plain', target.dataset.tokenId);
+        }
+      }
+
+      function handleDragOver(event) {
+        if (!draggedItem) return;
+        event.preventDefault();
+        if (event.dataTransfer) {
+          event.dataTransfer.dropEffect = 'move';
+        }
+        const list = event.currentTarget;
+        const target = event.target.closest('.word-item');
+        if (!target || target === draggedItem) {
+          if (!target) {
+            list.appendChild(draggedItem);
+          }
+          return;
+        }
+        const { left, width } = target.getBoundingClientRect();
+        const insertAfter = event.clientX > left + width / 2;
+        if (insertAfter) {
+          list.insertBefore(draggedItem, target.nextSibling);
+        } else {
+          list.insertBefore(draggedItem, target);
+        }
+      }
+
+      function handleDrop(event) {
+        if (!draggedItem) return;
+        event.preventDefault();
+        const list = event.currentTarget;
+        const target = event.target.closest('.word-item');
+        if (!target || target === draggedItem) {
+          if (!target) {
+            list.appendChild(draggedItem);
+          }
+        } else {
+          const { left, width } = target.getBoundingClientRect();
+          const insertAfter = event.clientX > left + width / 2;
+          if (insertAfter) {
+            list.insertBefore(draggedItem, target.nextSibling);
+          } else {
+            list.insertBefore(draggedItem, target);
+          }
+        }
+        checkOrder();
+      }
+
+      function handleDragEnd(event) {
+        const target = event.target.closest('.word-item');
+        if (target) {
+          target.classList.remove('word-item--dragging');
+        }
+        draggedItem = null;
+      }
+
+      [wordBank, sentenceLine].forEach((list) => {
+        list.addEventListener('dragstart', handleDragStart);
+        list.addEventListener('dragover', handleDragOver);
+        list.addEventListener('drop', handleDrop);
+        list.addEventListener('dragend', handleDragEnd);
+      });
+
+      resetButton.addEventListener('click', () => {
+        shuffledTokens = shuffle(tokens);
+        renderInitialState();
+      });
+
+      correctButton.addEventListener('click', () => {
+        correctButton.blur();
+      });
+
+      function checkOrder() {
+        const current = Array.from(sentenceLine.children).map((item) => Number(item.dataset.originalIndex));
+        const isComplete = current.length === tokens.length;
+        const isCorrect = isComplete && current.every((position, i) => position === i);
+        if (isCorrect) {
+          clone.classList.add('exercise-card--complete');
+          correctButton.hidden = false;
+          if (!hasSpoken) {
+            speakSentence(exercise.english);
+            hasSpoken = true;
+          }
+        } else {
+          clone.classList.remove('exercise-card--complete');
+          correctButton.hidden = true;
+          hasSpoken = false;
+        }
+      }
+
+      container.appendChild(clone);
+    });
+  </script>
+</body>
+</html>
