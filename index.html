@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Tenses Trainer</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --surface: #f5f7ff;
+      --surface-strong: #ffffff;
+      --accent: #2d4a7c;
+      --accent-light: #3f66ab;
+      --accent-soft: rgba(45, 74, 124, 0.12);
+      --text-main: #142033;
+      --text-muted: #4a5872;
+      --success: #2f9e44;
+      --border-radius: 1.25rem;
+      font-family: "Segoe UI", "Helvetica Neue", system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #e5ecff 0%, #c7d7f6 45%, #f5f7ff 100%);
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .hero {
+      padding: 3.5rem 1.5rem 2.5rem;
+      text-align: center;
+      background: linear-gradient(160deg, rgba(22, 36, 64, 0.9), rgba(45, 74, 124, 0.9)),
+        url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"%3E%3Cdefs%3E%3CradialGradient id="a" cx="47%" cy="33%" r="76%"%3E%3Cstop stop-color="%232f54a3" stop-opacity=".52" offset="0"/%3E%3Cstop stop-color="%23132446" stop-opacity="0" offset="1"/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width="400" height="400" fill="%23091323"/%3E%3Ccircle cx="300" cy="120" r="120" fill="url(%23a)"/%3E%3Ccircle cx="100" cy="300" r="140" fill="url(%23a)"/%3E%3C/svg%3E') no-repeat center/cover;
+      color: #fff;
+    }
+
+    .hero h1 {
+      color: #f8fbff;
+      font-size: clamp(2.2rem, 2.8vw + 1.3rem, 3.4rem);
+    }
+
+    .hero p {
+      max-width: 720px;
+      margin: 1rem auto 0;
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    .section-heading {
+      font-size: clamp(1.9rem, 1.5vw + 1.3rem, 2.4rem);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-subtitle {
+      margin-bottom: 2rem;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .tenses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .tense-card {
+      border-radius: var(--border-radius);
+      border: 2px solid rgba(45, 74, 124, 0.35);
+      background: rgba(255, 255, 255, 0.86);
+      padding: 1.6rem 1.2rem;
+      text-align: center;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent);
+      cursor: default;
+      transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+      box-shadow: 0 14px 34px rgba(13, 31, 67, 0.08);
+    }
+
+    .tense-card[data-tense-target] {
+      cursor: pointer;
+    }
+
+    .tense-card:hover,
+    .tense-card:focus-visible {
+      transform: translateY(-6px);
+      border-color: var(--accent);
+      box-shadow: 0 18px 40px rgba(20, 41, 82, 0.18);
+      outline: none;
+    }
+
+    .trainer-section {
+      margin-top: 4.5rem;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: calc(var(--border-radius) + 0.75rem);
+      box-shadow: 0 22px 60px rgba(10, 24, 55, 0.16);
+      padding: 2.5rem clamp(1.2rem, 3vw, 2.75rem) 3rem;
+    }
+
+    .trainer-header {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .trainer-header p {
+      margin: 0;
+      color: var(--text-muted);
+    }
+
+    .instruction-note {
+      padding: 0.85rem 1rem;
+      background: rgba(45, 74, 124, 0.08);
+      border-radius: 0.9rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .return-button {
+      align-self: flex-start;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 0.6rem 1.4rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 150ms ease, transform 150ms ease;
+    }
+
+    .return-button:hover,
+    .return-button:focus-visible {
+      background: var(--accent-light);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .exercise-list {
+      display: grid;
+      gap: 1.75rem;
+    }
+
+    .exercise-card {
+      padding: 1.6rem clamp(1rem, 2.4vw, 1.8rem) 1.8rem;
+      border-radius: 1.2rem;
+      border: 1px solid rgba(45, 74, 124, 0.18);
+      background: var(--surface-strong);
+      box-shadow: 0 12px 30px rgba(13, 31, 67, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .exercise-card.correct {
+      border-color: rgba(47, 158, 68, 0.35);
+      box-shadow: 0 18px 36px rgba(47, 158, 68, 0.18);
+    }
+
+    .exercise-header {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .exercise-number {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      min-width: 2.5rem;
+    }
+
+    .exercise-translation {
+      margin: 0;
+      color: var(--text-main);
+      font-size: 1.02rem;
+    }
+
+    .word-zone {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .word-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.75rem;
+      border-radius: 0.9rem;
+      border: 1px dashed rgba(45, 74, 124, 0.35);
+      background: rgba(45, 74, 124, 0.04);
+      min-height: 64px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scroll-snap-type: x mandatory;
+    }
+
+    .word-container::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .word-container::-webkit-scrollbar-thumb {
+      background: rgba(45, 74, 124, 0.3);
+      border-radius: 999px;
+    }
+
+    .word-bank {
+      flex-wrap: nowrap;
+    }
+
+    .assembly-area {
+      flex-wrap: wrap;
+      min-height: 80px;
+      background: rgba(45, 74, 124, 0.08);
+      border-style: solid;
+    }
+
+    .word-container.is-empty::before {
+      content: attr(data-placeholder);
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .word-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.01em;
+      cursor: grab;
+      scroll-snap-align: start;
+      user-select: none;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+
+    .word-chip:hover {
+      background: var(--accent-light);
+    }
+
+    .word-chip:focus-visible {
+      outline: 3px solid rgba(255, 183, 3, 0.55);
+      outline-offset: 3px;
+    }
+
+    .word-chip.dragging {
+      opacity: 0.6;
+      cursor: grabbing;
+      box-shadow: 0 12px 28px rgba(13, 31, 67, 0.24);
+    }
+
+    .exercise-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+    }
+
+    .reset-button,
+    .correct-button {
+      border: none;
+      border-radius: 999px;
+      padding: 0.55rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: transform 150ms ease, box-shadow 150ms ease;
+    }
+
+    .reset-button {
+      background: rgba(45, 74, 124, 0.14);
+      color: var(--accent);
+    }
+
+    .reset-button:hover,
+    .reset-button:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(20, 41, 82, 0.18);
+      outline: none;
+    }
+
+    .trainer-placeholder {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 1.02rem;
+    }
+
+    .trainer-footer {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .correct-button {
+      background: var(--success);
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(47, 158, 68, 0.26);
+      display: none;
+    }
+
+    .exercise-card.correct .correct-button {
+      display: inline-flex;
+    }
+
+    .correct-button:hover,
+    .correct-button:focus-visible {
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .exercise-audio {
+      width: 100%;
+      max-width: 320px;
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    .exercise-card.correct .exercise-audio {
+      display: block;
+    }
+
+    .audio-status {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2.5rem 1.5rem 3rem;
+      color: rgba(255, 255, 255, 0.88);
+      background: linear-gradient(160deg, rgba(22, 36, 64, 0.95), rgba(45, 74, 124, 0.92));
+    }
+
+    @media (max-width: 720px) {
+      .exercise-header {
+        flex-direction: column;
+      }
+
+      .exercise-number {
+        min-width: unset;
+      }
+
+      .word-container {
+        min-height: 54px;
+      }
+
+      .trainer-section {
+        margin-top: 3.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero" id="top" data-homepage>
+    <h1 tabindex="-1" data-homepage-focus>English Tenses Trainer</h1>
+    <p>Explore every English tense and practice Present Continuous sentences by dragging words into place.</p>
+  </header>
+  <main>
+    <section class="tenses-section" id="tenses" data-homepage>
+      <h2 class="section-heading" tabindex="-1">All 12 English Tenses</h2>
+      <p class="section-subtitle">Click a card to open its trainer. Present Continuous practice is ready for you below.</p>
+      <div class="tenses-grid" role="list">
+        <button class="tense-card" type="button" data-tense-target="present-simple">Present Simple</button>
+        <button class="tense-card" type="button" data-tense-target="present-continuous">Present Continuous</button>
+        <button class="tense-card" type="button" data-tense-target="present-perfect">Present Perfect</button>
+        <button class="tense-card" type="button" data-tense-target="present-perfect-continuous">Present Perfect Continuous</button>
+        <button class="tense-card" type="button" data-tense-target="past-simple">Past Simple</button>
+        <button class="tense-card" type="button" data-tense-target="past-continuous">Past Continuous</button>
+        <button class="tense-card" type="button" data-tense-target="past-perfect">Past Perfect</button>
+        <button class="tense-card" type="button" data-tense-target="past-perfect-continuous">Past Perfect Continuous</button>
+        <button class="tense-card" type="button" data-tense-target="future-simple">Future Simple</button>
+        <button class="tense-card" type="button" data-tense-target="future-continuous">Future Continuous</button>
+        <button class="tense-card" type="button" data-tense-target="future-perfect">Future Perfect</button>
+        <button class="tense-card" type="button" data-tense-target="future-perfect-continuous">Future Perfect Continuous</button>
+      </div>
+    </section>
+
+    <section class="trainer-section" data-tense-section="present-simple" hidden>
+      <div class="trainer-header">
+        <div>
+          <h2 class="section-heading" tabindex="-1" data-trainer-focus>Present Simple Trainer</h2>
+          <p class="instruction-note">Practice materials for this tense are coming soon.</p>
+        </div>
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+      <p class="trainer-placeholder">We're preparing Present Simple exercises. Please check back later!</p>
+      <div class="trainer-footer">
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+    </section>
+
+    <section class="trainer-section" data-tense-section="present-continuous" hidden>
+      <div class="trainer-header">
+        <div>
+          <h2 class="section-heading" tabindex="-1" data-trainer-focus>Present Continuous Trainer</h2>
+          <p class="instruction-note">Попробуйте перевести вслух, потом собрать предложение.</p>
+        </div>
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+      <div class="exercise-list" id="exercise-list" aria-live="polite"></div>
+      <div class="trainer-footer">
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+    </section>
+
+    <section class="trainer-section" data-tense-section="present-perfect" hidden>
+      <div class="trainer-header">
+        <div>
+          <h2 class="section-heading" tabindex="-1" data-trainer-focus>Present Perfect Trainer</h2>
+          <p class="instruction-note">Practice materials for this tense are coming soon.</p>
+        </div>
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+      <p class="trainer-placeholder">We're preparing Present Perfect exercises. Please check back later!</p>
+      <div class="trainer-footer">
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+    </section>
+
+    <section class="trainer-section" data-tense-section="present-perfect-continuous" hidden>
+      <div class="trainer-header">
+        <div>
+          <h2 class="section-heading" tabindex="-1" data-trainer-focus>Present Perfect Continuous Trainer</h2>
+          <p class="instruction-note">Practice materials for this tense are coming soon.</p>
+        </div>
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+      <p class="trainer-placeholder">We're preparing Present Perfect Continuous exercises. Please check back later!</p>
+      <div class="trainer-footer">
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+    </section>
+
+    <section class="trainer-section" data-tense-section="past-simple" hidden>
+      <div class="trainer-header">
+        <div>
+          <h2 class="section-heading" tabindex="-1" data-trainer-focus>Past Simple Trainer</h2>
+          <p class="instruction-note">Practice materials for this tense are coming soon.</p>
+        </div>
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+      <p class="trainer-placeholder">We're preparing Past Simple exercises. Please check back later!</p>
+      <div class="trainer-footer">
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+    </section>
+
+    <section class="trainer-section" data-tense-section="past-continuous" hidden>
+      <div class="trainer-header">
+        <div>
+          <h2 class="section-heading" tabindex="-1" data-trainer-focus>Past Continuous Trainer</h2>
+          <p class="instruction-note">Practice materials for this tense are coming soon.</p>
+        </div>
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+      <p class="trainer-placeholder">We're preparing Past Continuous exercises. Please check back later!</p>
+      <div class="trainer-footer">
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+    </section>
+
+    <section class="trainer-section" data-tense-section="past-perfect" hidden>
+      <div class="trainer-header">
+        <div>
+          <h2 class="section-heading" tabindex="-1" data-trainer-focus>Past Perfect Trainer</h2>
+          <p class="instruction-note">Practice materials for this tense are coming soon.</p>
+        </div>
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+      <p class="trainer-placeholder">We're preparing Past Perfect exercises. Please check back later!</p>
+      <div class="trainer-footer">
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+    </section>
+
+    <section class="trainer-section" data-tense-section="past-perfect-continuous" hidden>
+      <div class="trainer-header">
+        <div>
+          <h2 class="section-heading" tabindex="-1" data-trainer-focus>Past Perfect Continuous Trainer</h2>
+          <p class="instruction-note">Practice materials for this tense are coming soon.</p>
+        </div>
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+      <p class="trainer-placeholder">We're preparing Past Perfect Continuous exercises. Please check back later!</p>
+      <div class="trainer-footer">
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+    </section>
+
+    <section class="trainer-section" data-tense-section="future-simple" hidden>
+      <div class="trainer-header">
+        <div>
+          <h2 class="section-heading" tabindex="-1" data-trainer-focus>Future Simple Trainer</h2>
+          <p class="instruction-note">Practice materials for this tense are coming soon.</p>
+        </div>
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+      <p class="trainer-placeholder">We're preparing Future Simple exercises. Please check back later!</p>
+      <div class="trainer-footer">
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+    </section>
+
+    <section class="trainer-section" data-tense-section="future-continuous" hidden>
+      <div class="trainer-header">
+        <div>
+          <h2 class="section-heading" tabindex="-1" data-trainer-focus>Future Continuous Trainer</h2>
+          <p class="instruction-note">Practice materials for this tense are coming soon.</p>
+        </div>
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+      <p class="trainer-placeholder">We're preparing Future Continuous exercises. Please check back later!</p>
+      <div class="trainer-footer">
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+    </section>
+
+    <section class="trainer-section" data-tense-section="future-perfect" hidden>
+      <div class="trainer-header">
+        <div>
+          <h2 class="section-heading" tabindex="-1" data-trainer-focus>Future Perfect Trainer</h2>
+          <p class="instruction-note">Practice materials for this tense are coming soon.</p>
+        </div>
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+      <p class="trainer-placeholder">We're preparing Future Perfect exercises. Please check back later!</p>
+      <div class="trainer-footer">
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+    </section>
+
+    <section class="trainer-section" data-tense-section="future-perfect-continuous" hidden>
+      <div class="trainer-header">
+        <div>
+          <h2 class="section-heading" tabindex="-1" data-trainer-focus>Future Perfect Continuous Trainer</h2>
+          <p class="instruction-note">Practice materials for this tense are coming soon.</p>
+        </div>
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+      <p class="trainer-placeholder">We're preparing Future Perfect Continuous exercises. Please check back later!</p>
+      <div class="trainer-footer">
+        <button class="return-button" type="button" data-return>Back to list</button>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; <span id="footer-year"></span> English Tenses Trainer. Practice makes progress!</p>
+  </footer>
+
+  <script>
+    const exercises = [
+      { number: 1, russian: "Я работаю. Я не смотрю телевизор.", solutions: ["I'm working. I'm not watching TV."] },
+      { number: 2, russian: "Мария читает газету.", solutions: ["Maria is reading a newspaper."] },
+      { number: 3, russian: "Она не ест.", solutions: ["She isn't eating."] },
+      { number: 4, russian: "Она не ест.", solutions: ["She's not eating."] },
+      { number: 5, russian: "Автобус приближается.", solutions: ["The bus is coming."] },
+      { number: 6, russian: "Мы ужинаем.", solutions: ["We're having dinner."] },
+      { number: 7, russian: "Ты меня не слушаешь.", solutions: ["You're not listening to me."] },
+      { number: 8, russian: "Вы меня не слушаете.", solutions: ["You aren't listening to me."] },
+      { number: 9, russian: "Дети делают домашнее задание.", solutions: ["The children are doing their homework."] },
+      { number: 10, russian: "Пожалуйста, будьте тише. Я работаю.", solutions: ["Please be quiet. I'm working."] },
+      { number: 11, russian: "Смотри, вот Сара. На ней коричневое пальто.", solutions: ["Look, there's Sarah. She's wearing a brown coat."] },
+      { number: 12, russian: "Погода хорошая. Дождя нет.", solutions: ["The weather is nice. It's not raining."] },
+      { number: 13, russian: "Где дети? Они играют в парке.", solutions: ["Where are the children? They're playing in the park."] },
+      { number: 14, russian: "Мы сейчас ужинаем. Можно я перезвоню позже?", solutions: ["We're having dinner now. Can I call you later?"] },
+      { number: 15, russian: "Можешь выключить телевизор. Я его не смотрю.", solutions: ["You can turn off the television. I'm not watching it."] },
+      { number: 16, russian: "Она ест яблоко.", solutions: ["She's eating an apple."] },
+      { number: 17, russian: "Он ждёт автобус.", solutions: ["He is waiting for a bus."] },
+      { number: 18, russian: "Они играют в футбол.", solutions: ["They are playing football."] },
+      { number: 19, russian: "Он лежит на полу.", solutions: ["He is lying on the floor."] },
+      { number: 20, russian: "Они завтракают.", solutions: ["They are having breakfast."] },
+      { number: 21, russian: "Она сидит на столе.", solutions: ["She is sitting on the table."] },
+      { number: 22, russian: "Он готовит.", solutions: ["He's cooking."] },
+      { number: 23, russian: "Ты наступил на мою ногу. — Ой, извини!", solutions: ["You are standing on my foot. \"Oh, I'm sorry!\""] },
+      { number: 24, russian: "Смотри! Кто-то плывёт в реке.", solutions: ["Look! Somebody is swimming in the river."] },
+      { number: 25, russian: "Мы здесь в отпуске. Мы остановились в отеле 'Сентрал'.", solutions: ["We're here on holiday. We're staying at the Central Hotel."] },
+      { number: 26, russian: "Где Сью? Она принимает душ.", solutions: ["Where's Sue? She's having a shower."] },
+      { number: 27, russian: "Сейчас они строят новый отель в центре города.", solutions: ["They're building a new hotel in the city centre at the moment."] },
+      { number: 28, russian: "Я ухожу. Пока.", solutions: ["I'm going now. Goodbye."] },
+      { number: 29, russian: "Джейн не ужинает.", solutions: ["Jane isn't having dinner."] },
+      { number: 30, russian: "Джейн смотрит телевизор.", solutions: ["Jane's watching TV."] },
+      { number: 31, russian: "Она не сидит на полу.", solutions: ["She isn't sitting on the floor."] },
+      { number: 32, russian: "Она не читает книгу.", solutions: ["She isn't reading a book."] },
+      { number: 33, russian: "Она не играет на пианино.", solutions: ["She isn't playing the piano."] },
+      { number: 34, russian: "Она смеётся.", solutions: ["She's laughing."] },
+      { number: 35, russian: "На ней шляпа.", solutions: ["She's wearing a hat."] },
+      { number: 36, russian: "Она не пьёт кофе.", solutions: ["She isn't drinking coffee."] },
+      { number: 37, russian: "Кейт хочет работать в Италии, поэтому она учит итальянский.", solutions: ["Kate wants to work in Italy, so she's learning Italian."] },
+      { number: 38, russian: "Мои друзья строят собственный дом. Они надеются закончить его следующим летом.", solutions: ["Some friends of mine are building their own house. They hope to finish it next summer."] },
+      { number: 39, russian: "Ты сегодня усердно работаешь.", solutions: ["You're working hard today."] },
+      { number: 40, russian: "Да, у меня много дел.", solutions: ["Yes, I have a lot to do."] },
+      { number: 41, russian: "Компания, в которой я работаю, в этом году выступает не так хорошо.", solutions: ["The company I work for isn't doing so well this year."] },
+      { number: 42, russian: "Твой английский становится лучше?", solutions: ["Is your English getting better?"] },
+      { number: 43, russian: "Население мира очень быстро растёт.", solutions: ["The population of the world is increasing very fast."] },
+      { number: 44, russian: "Сначала мне не нравилась моя работа, но сейчас она начинает нравиться.", solutions: ["At first I didn't like my job, but I'm beginning to enjoy it now."] },
+      { number: 45, russian: "Пожалуйста, не шуми так сильно. Уже поздно.", solutions: ["Please don't make so much noise. It's getting late."] },
+      { number: 46, russian: "Мне нужно скоро что-нибудь поесть. Я проголодался.", solutions: ["I need to eat something soon. I'm getting hungry."] },
+      { number: 47, russian: "Мне сейчас негде жить. Я ищу квартиру.", solutions: ["I don't have anywhere to live right now. I'm looking for an apartment."] },
+      { number: 48, russian: "Нам скоро нужно уходить. Начинается дождь.", solutions: ["We need to leave soon. It's starting to rain."] },
+      { number: 49, russian: "Им больше не нужна машина. Они пытаются её продать.", solutions: ["They don't need their car any more. They're trying to sell it."] },
+      { number: 50, russian: "Дела на работе идут не очень хорошо. Компания теряет деньги.", solutions: ["Things are not so good at work. The company is losing money."] },
+      { number: 51, russian: "То, что они сказали, неправда. Они лгут.", solutions: ["It isn't true what they said. They're lying."] },
+      { number: 52, russian: "Мы промокнем. Начинается дождь.", solutions: ["We're going to get wet. It's starting to rain."] },
+      { number: 53, russian: "Пожалуйста, не шуми так сильно. Я пытаюсь работать.", solutions: ["Please don't make so much noise. I'm trying to work."] },
+      { number: 54, russian: "Давай выйдем сейчас. Дождь больше не идёт.", solutions: ["Let's go out now. It isn't raining any more."] },
+      { number: 55, russian: "Можешь выключить радио. Я его не слушаю.", solutions: ["You can turn off the radio. I'm not listening to it."] },
+      { number: 56, russian: "Кейт позвонила мне прошлой ночью. Она в отпуске во Франции. Ей там очень нравится и она не хочет возвращаться.", solutions: ["Kate phoned me last night. She's on holiday in France. She's having a great time and doesn't want to come back."] },
+      { number: 57, russian: "Я хочу похудеть, поэтому на этой неделе я не обедаю.", solutions: ["I want to lose weight, so this week I'm not eating lunch."] },
+      { number: 58, russian: "Эндрю только что начал вечерние курсы. Он учит японский.", solutions: ["Andrew has just started evening classes. He's learning Japanese."] },
+      { number: 59, russian: "Пол и Салли поссорились. Они не разговаривают друг с другом.", solutions: ["Paul and Sally have had an argument. They aren't speaking to each other."] },
+      { number: 60, russian: "Я устаю. Мне нужен отдых.", solutions: ["I'm getting tired. I need a rest."] },
+      { number: 61, russian: "Тим сегодня не работает. Он взял выходной.", solutions: ["Tim isn't working today. He's taken the day off."] },
+      { number: 62, russian: "Я ищу Софи. Ты знаешь, где она?", solutions: ["I'm looking for Sophie. Do you know where she is?"] },
+      { number: 63, russian: "Мир меняется. Ничто не остаётся прежним.", solutions: ["The world is changing. Things never stay the same."] },
+      { number: 64, russian: "Ситуация уже плохая и становится хуже.", solutions: ["The situation is already bad and it is getting worse."] },
+      { number: 65, russian: "Стоимость жизни растёт. Каждый год всё дороже.", solutions: ["The cost of living is rising. Every year things are more expensive."] },
+      { number: 66, russian: "Погода начинает улучшаться. Дождь прекратился, и ветер уже не такой сильный.", solutions: ["The weather is starting to improve. The rain has stopped, and the wind isn't as strong."] }
+    ];
+
+    const preparedExercises = exercises.map((exercise) => {
+      const solutionTokens = tokenize(exercise.solutions[0]);
+      const normalizedSolutions = exercise.solutions.map((sentence) => normalizeSentence(sentence));
+      return {
+        ...exercise,
+        tokens: solutionTokens,
+        normalizedSolutions,
+      };
+    });
+
+    const wordRegistry = new Map();
+    const homepageElements = document.querySelectorAll('[data-homepage]');
+    const homepageFocusTarget = document.querySelector('[data-homepage-focus]');
+    const trainerSections = document.querySelectorAll('[data-tense-section]');
+    const prefersReducedMotion =
+      typeof window.matchMedia === 'function'
+        ? window.matchMedia('(prefers-reduced-motion: reduce)')
+        : { matches: false };
+
+    function scrollToTop() {
+      const behavior = prefersReducedMotion.matches ? 'auto' : 'smooth';
+      window.scrollTo({ top: 0, behavior });
+    }
+
+    function hideAllTrainerSections() {
+      trainerSections.forEach((section) => section.setAttribute('hidden', ''));
+    }
+
+    function showHomepage() {
+      hideAllTrainerSections();
+      homepageElements.forEach((element) => element.removeAttribute('hidden'));
+      scrollToTop();
+      if (homepageFocusTarget) {
+        homepageFocusTarget.focus({ preventScroll: true });
+      }
+    }
+
+    function showTrainerSection(targetId) {
+      const target = document.querySelector(`[data-tense-section="${targetId}"]`);
+      if (!target) return;
+      homepageElements.forEach((element) => element.setAttribute('hidden', ''));
+      hideAllTrainerSections();
+      target.removeAttribute('hidden');
+      scrollToTop();
+      const focusTarget = target.querySelector('[data-trainer-focus]');
+      if (focusTarget) {
+        focusTarget.focus({ preventScroll: true });
+      }
+    }
+
+    function tokenize(sentence) {
+      return sentence.trim().replace(/\s+/g, ' ').split(' ').filter(Boolean);
+    }
+
+    function normalizeSentence(sentence) {
+      return sentence
+        .trim()
+        .replace(/\s+/g, ' ')
+        .replace(/\s+([.,!?;:])/g, '$1')
+        .replace(/\s+(\"|')/g, '$1')
+        .replace(/(\"|')\s+/g, '$1')
+        .toLowerCase();
+    }
+
+    function shuffle(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function createWordChip(word) {
+      const chip = document.createElement('div');
+      chip.className = 'word-chip';
+      chip.textContent = word.text;
+      chip.setAttribute('draggable', 'true');
+      chip.dataset.wordId = word.id;
+      chip.tabIndex = 0;
+      chip.addEventListener('dragstart', handleDragStart);
+      chip.addEventListener('dragend', handleDragEnd);
+      chip.addEventListener('keydown', (event) => handleChipKeypress(event, chip));
+      return chip;
+    }
+
+    function handleChipKeypress(event, chip) {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      const parent = chip.parentElement;
+      const card = chip.closest('.exercise-card');
+      if (!card) return;
+      const bank = card.querySelector('.word-bank');
+      const assembly = card.querySelector('.assembly-area');
+      if (parent === bank) {
+        assembly.appendChild(chip);
+      } else {
+        bank.appendChild(chip);
+      }
+      updateCardState(card);
+    }
+
+    let draggedElement = null;
+
+    function handleDragStart(event) {
+      draggedElement = event.currentTarget;
+      event.dataTransfer.setData('text/plain', draggedElement.dataset.wordId);
+      event.dataTransfer.effectAllowed = 'move';
+      requestAnimationFrame(() => draggedElement.classList.add('dragging'));
+    }
+
+    function handleDragEnd(event) {
+      event.currentTarget.classList.remove('dragging');
+      draggedElement = null;
+    }
+
+    function handleDragOver(event) {
+      event.preventDefault();
+      const container = event.currentTarget;
+      const afterElement = getDragAfterElement(container, event.clientX);
+      const dragging = container.closest('.exercise-card').querySelector('.word-chip.dragging');
+      if (!dragging) return;
+      if (afterElement == null) {
+        container.appendChild(dragging);
+      } else {
+        container.insertBefore(dragging, afterElement);
+      }
+    }
+
+    function handleDrop(event) {
+      event.preventDefault();
+      const card = event.currentTarget.closest('.exercise-card');
+      if (card) {
+        updateCardState(card);
+      }
+    }
+
+    function getDragAfterElement(container, x) {
+      const draggableElements = [...container.querySelectorAll('.word-chip:not(.dragging)')];
+      return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = x - (box.left + box.width / 2);
+        if (offset < 0 && offset > closest.offset) {
+          return { offset, element: child };
+        }
+        return closest;
+      }, { offset: Number.NEGATIVE_INFINITY, element: null }).element;
+    }
+
+    function updateCardState(card) {
+      const bank = card.querySelector('.word-bank');
+      const assembly = card.querySelector('.assembly-area');
+      togglePlaceholder(bank);
+      togglePlaceholder(assembly);
+      const assembledWords = [...assembly.querySelectorAll('.word-chip')].map((chip) => chip.textContent);
+      const assembledSentence = normalizeSentence(assembledWords.join(' '));
+      const index = Number(card.dataset.exerciseIndex);
+      const exercise = preparedExercises[index];
+      const correct = assembledWords.length === exercise.tokens.length && exercise.normalizedSolutions.includes(assembledSentence);
+      card.classList.toggle('correct', correct);
+      const status = card.querySelector('.audio-status');
+      const audio = card.querySelector('.exercise-audio');
+
+      if (correct) {
+        status.textContent = 'Правильно! Проигрываем предложение…';
+        audio.dataset.sentence = exercise.solutions[0];
+        prepareAudioElement(audio);
+        speakSentence(exercise.solutions[0]);
+      } else {
+        status.textContent = '';
+      }
+    }
+
+    function togglePlaceholder(container) {
+      const hasWords = container.querySelector('.word-chip') !== null;
+      container.classList.toggle('is-empty', !hasWords);
+    }
+
+    function prepareAudioElement(audio) {
+      if (audio.dataset.prepared === 'true') return;
+      audio.dataset.prepared = 'true';
+      audio.addEventListener('play', (event) => {
+        const sentence = audio.dataset.sentence;
+        if (!sentence) return;
+        if (!('speechSynthesis' in window)) return;
+        event.preventDefault();
+        audio.pause();
+        audio.currentTime = 0;
+        speakSentence(sentence);
+      });
+      audio.addEventListener('click', () => {
+        if (!audio.dataset.sentence || !('speechSynthesis' in window)) return;
+        speakSentence(audio.dataset.sentence);
+      });
+    }
+
+    function speakSentence(sentence) {
+      if (!('speechSynthesis' in window)) {
+        console.warn('Speech synthesis is not supported in this browser.');
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(sentence);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.95;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function renderExercises() {
+      const list = document.getElementById('exercise-list');
+      const fragment = document.createDocumentFragment();
+      preparedExercises.forEach((exercise, index) => {
+        const card = document.createElement('article');
+        card.className = 'exercise-card';
+        card.dataset.exerciseIndex = String(index);
+
+        const header = document.createElement('div');
+        header.className = 'exercise-header';
+        const number = document.createElement('div');
+        number.className = 'exercise-number';
+        number.textContent = `${exercise.number}.`;
+        const translation = document.createElement('p');
+        translation.className = 'exercise-translation';
+        translation.textContent = exercise.russian;
+        header.append(number, translation);
+
+        const wordZone = document.createElement('div');
+        wordZone.className = 'word-zone';
+
+        const bank = document.createElement('div');
+        bank.className = 'word-container word-bank';
+        bank.dataset.placeholder = 'Слова предложения появятся здесь';
+        bank.addEventListener('dragover', handleDragOver);
+        bank.addEventListener('drop', handleDrop);
+
+        const assembly = document.createElement('div');
+        assembly.className = 'word-container assembly-area is-empty';
+        assembly.dataset.placeholder = 'Перетащите слова в правильном порядке';
+        assembly.addEventListener('dragover', handleDragOver);
+        assembly.addEventListener('drop', handleDrop);
+
+        const shuffledTokens = shuffle(exercise.tokens.map((text, idx) => ({ text, id: `${exercise.number}-${idx}` })));
+        shuffledTokens.forEach((token) => {
+          wordRegistry.set(token.id, token.text);
+          bank.appendChild(createWordChip(token));
+        });
+
+        togglePlaceholder(bank);
+        togglePlaceholder(assembly);
+
+        wordZone.append(bank, assembly);
+
+        const controls = document.createElement('div');
+        controls.className = 'exercise-controls';
+        const reset = document.createElement('button');
+        reset.className = 'reset-button';
+        reset.type = 'button';
+        reset.textContent = 'Reset';
+        reset.addEventListener('click', () => {
+          resetSentence(card, exercise);
+        });
+
+        const correctButton = document.createElement('button');
+        correctButton.className = 'correct-button';
+        correctButton.type = 'button';
+        correctButton.textContent = 'Correct';
+
+        controls.append(reset, correctButton);
+
+        const audio = document.createElement('audio');
+        audio.className = 'exercise-audio';
+        audio.setAttribute('controls', '');
+        audio.dataset.prepared = 'false';
+
+        const status = document.createElement('p');
+        status.className = 'audio-status';
+        status.setAttribute('role', 'status');
+        status.setAttribute('aria-live', 'polite');
+
+        card.append(header, wordZone, controls, audio, status);
+        fragment.appendChild(card);
+      });
+      list.appendChild(fragment);
+    }
+
+    function resetSentence(card, exercise) {
+      const bank = card.querySelector('.word-bank');
+      const assembly = card.querySelector('.assembly-area');
+      const chips = [...card.querySelectorAll('.word-chip')];
+      const shuffled = shuffle(chips);
+      shuffled.forEach((chip) => bank.appendChild(chip));
+      card.classList.remove('correct');
+      const status = card.querySelector('.audio-status');
+      status.textContent = '';
+      const audio = card.querySelector('.exercise-audio');
+      audio.dataset.sentence = '';
+      togglePlaceholder(bank);
+      togglePlaceholder(assembly);
+    }
+
+    function setupNavigation() {
+      document.querySelectorAll('[data-tense-target]').forEach((card) => {
+        card.addEventListener('click', () => {
+          const targetId = card.getAttribute('data-tense-target');
+          if (targetId) {
+            showTrainerSection(targetId);
+          }
+        });
+      });
+
+      document.querySelectorAll('[data-return]').forEach((button) => {
+        button.addEventListener('click', () => {
+          showHomepage();
+        });
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderExercises();
+      setupNavigation();
+      const yearSpan = document.getElementById('footer-year');
+      if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+    });
+  </script>
+</body>
+</html>
