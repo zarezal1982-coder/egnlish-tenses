@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Spending Boom Article</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body.article-page {
+      background: #f5f7fb;
+      color: #1d1f21;
+    }
+
+    .article-layout {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .article-hero {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e5e9f2;
+    }
+
+    .article-hero h1 {
+      margin: 0 0 0.5rem;
+      font-size: 1.75rem;
+    }
+
+    .article-hero p {
+      margin: 0;
+      color: #4b5563;
+    }
+
+    .keywords-card,
+    .article-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 12px 34px rgba(17, 24, 39, 0.08);
+      border: 1px solid #e5e9f2;
+    }
+
+    .keywords-card h2,
+    .article-card h2 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      font-size: 1.25rem;
+    }
+
+    .keywords-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .keyword-button {
+      width: 100%;
+      text-align: left;
+      border: 1px solid #d6dce8;
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      background: linear-gradient(135deg, #f8fbff, #eef3ff);
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+
+    .keyword-button:hover,
+    .keyword-button:focus-visible {
+      outline: none;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(60, 98, 255, 0.12);
+    }
+
+    .keyword-button .keyword-text {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      color: #111827;
+    }
+
+    .keyword-button .keyword-meta {
+      font-size: 0.95rem;
+      color: #374151;
+    }
+
+    .article-body {
+      line-height: 1.75;
+      font-size: 1.05rem;
+      color: #1f2937;
+    }
+
+    .article-body .paragraph {
+      margin-bottom: 1rem;
+    }
+
+    .word-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border: none;
+      background: transparent;
+      color: inherit;
+      padding: 0.15rem 0.35rem;
+      margin: 0 0.05rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .word-button:hover,
+    .word-button:focus-visible {
+      outline: none;
+      background: #e0e7ff;
+      box-shadow: 0 0 0 2px #c7d2fe;
+    }
+
+    .word-button .speaker {
+      opacity: 0;
+      font-size: 0.85rem;
+      transition: opacity 120ms ease;
+    }
+
+    .word-button:hover .speaker,
+    .word-button:focus-visible .speaker {
+      opacity: 1;
+    }
+
+    .word-panel {
+      position: sticky;
+      bottom: 1rem;
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      display: grid;
+      gap: 0.25rem;
+      box-shadow: 0 18px 38px rgba(0, 0, 0, 0.25);
+      border: 1px solid #1e293b;
+    }
+
+    .word-panel .label {
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      color: #cbd5e1;
+    }
+
+    .word-panel .value {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .quote {
+      background: linear-gradient(120deg, #eef2ff, #f5f3ff);
+      border-left: 4px solid #6366f1;
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      margin: 1rem 0;
+      font-weight: 700;
+      color: #312e81;
+    }
+
+    .word-panel .ipa {
+      font-family: "IBM Plex Mono", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    @media (max-width: 640px) {
+      .article-hero,
+      .keywords-card,
+      .article-card {
+        padding: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body class="article-page">
+  <main class="article-layout">
+    <section class="article-hero">
+      <p class="eyebrow">Questor | Russ Mould</p>
+      <h1>AI spending boom still grips investors</h1>
+      <p>Note: every word below is clickable. Tap a word to hear the pronunciation, see the IPA transcription, and read the Russian translation.</p>
+    </section>
+
+    <section class="keywords-card" aria-labelledby="keywords-heading">
+      <h2 id="keywords-heading">Important words to know</h2>
+      <ul class="keywords-list" id="keywords"></ul>
+    </section>
+
+    <section class="article-card" aria-labelledby="article-heading">
+      <h2 id="article-heading">Article</h2>
+      <div class="quote">The future of AI can be understood by knowing the history of stock markets.</div>
+      <div class="article-body" id="article"></div>
+    </section>
+
+    <section class="word-panel" aria-live="polite">
+      <div class="label">Selected word</div>
+      <div class="value" id="panel-word">Tap any word</div>
+      <div class="label">IPA</div>
+      <div class="value ipa" id="panel-ipa">—</div>
+      <div class="label">Translation</div>
+      <div class="value" id="panel-translation">—</div>
+    </section>
+  </main>
+
+  <script>
+    const translationMap = {
+      note: { ipa: "nəʊt", translation: "заметка" },
+      every: { ipa: "ˈɛvri", translation: "каждое" },
+      word: { ipa: "wɜːd", translation: "слово" },
+      below: { ipa: "bɪˈləʊ", translation: "ниже" },
+      is: { ipa: "ɪz", translation: "является" },
+      clickable: { ipa: "ˈklɪkəbl", translation: "кликабельное" },
+      tap: { ipa: "tæp", translation: "нажмите" },
+      a: { ipa: "ə", translation: "" },
+      to: { ipa: "tə", translation: "чтобы" },
+      hear: { ipa: "hɪə", translation: "услышать" },
+      the: { ipa: "ðə", translation: "" },
+      pronunciation: { ipa: "prəˌnʌnsiˈeɪʃən", translation: "произношение" },
+      see: { ipa: "siː", translation: "увидеть" },
+      ipa: { ipa: "ˌaɪpiːˈeɪ", translation: "МФА" },
+      transcription: { ipa: "trænˈskrɪpʃən", translation: "транскрипция" },
+      and: { ipa: "ənd", translation: "и" },
+      russian: { ipa: "ˈrʌʃən", translation: "русский" },
+      translation: { ipa: "trænzˈleɪʃən", translation: "перевод" },
+      debate: { ipa: "dɪˈbeɪt", translation: "спор" },
+      over: { ipa: "ˈəʊvə", translation: "о" },
+      whether: { ipa: "ˈwɛðə", translation: "ли" },
+      artificial: { ipa: "ˌɑːtɪˈfɪʃəl", translation: "искусственный" },
+      intelligence: { ipa: "ɪnˈtɛlɪdʒəns", translation: "интеллект" },
+      spending: { ipa: "ˈspɛndɪŋ", translation: "расходы" },
+      boom: { ipa: "buːm", translation: "бум" },
+      still: { ipa: "stɪl", translation: "по-прежнему" },
+      grips: { ipa: "ɡrɪps", translation: "охватывает" },
+      investors: { ipa: "ɪnˈvɛstəz", translation: "инвесторов" },
+      bubble: { ipa: "ˈbʌbəl", translation: "пузырь" },
+      continues: { ipa: "kənˈtɪnjuːz", translation: "продолжается" },
+      rumble: { ipa: "ˈrʌmbəl", translation: "греметь" },
+      microsoft: { ipa: "ˈmaɪkrəˌsɒft", translation: "Майкрософт" },
+      openai: { ipa: "ˌəʊpən.eɪˈaɪ", translation: "OpenAI" },
+      reportedly: { ipa: "rɪˈpɔːtɪdli", translation: "как сообщают" },
+      preparing: { ipa: "prɪˈpɛərɪŋ", translation: "готовят" },
+      for: { ipa: "fə", translation: "для" },
+      flotations: { ipa: "fləʊˈteɪʃənz", translation: "размещения" },
+      with: { ipa: "wɪð", translation: "с" },
+      price: { ipa: "praɪs", translation: "ценовые" },
+      tags: { ipa: "tæɡz", translation: "ярлыки" },
+      in: { ipa: "ɪn", translation: "в" },
+      the: { ipa: "ðə", translation: "" },
+      hundreds: { ipa: "ˈhʌndrədz", translation: "сотнях" },
+      of: { ipa: "əv", translation: "" },
+      billions: { ipa: "ˈbɪljənz", translation: "миллиардов" },
+      dollars: { ipa: "ˈdɒləz", translation: "долларов" },
+      only: { ipa: "ˈəʊnli", translation: "только" },
+      so: { ipa: "səʊ", translation: "так" },
+      called: { ipa: "kɔːld", translation: "называемые" },
+      magnificent: { ipa: "mæɡˈnɪfɪsənt", translation: "великолепные" },
+      seven: { ipa: "ˈsɛvən", translation: "семёрка" },
+      whose: { ipa: "huːz", translation: "чьи" },
+      share: { ipa: "ʃeə", translation: "акции" },
+      prices: { ipa: "ˈpraɪsɪz", translation: "цены" },
+      are: { ipa: "ɑː", translation: "" },
+      backbone: { ipa: "ˈbækbəʊn", translation: "основа" },
+      all: { ipa: "ɔːl", translation: "всех" },
+      things: { ipa: "θɪŋz", translation: "вещей" },
+      ai: { ipa: "ˌeɪˈaɪ", translation: "ИИ" },
+      not: { ipa: "nɒt", translation: "не" },
+      yet: { ipa: "jɛt", translation: "ещё" },
+      rushing: { ipa: "ˈrʌʃɪŋ", translation: "спешат" },
+      sell: { ipa: "sɛl", translation: "продавать" },
+      more: { ipa: "mɔː", translation: "больше" },
+      stock: { ipa: "stɒk", translation: "акций" },
+      even: { ipa: "ˈiːvən", translation: "даже" },
+      though: { ipa: "ðəʊ", translation: "хотя" },
+      they: { ipa: "ðeɪ", translation: "они" },
+      plan: { ipa: "plæn", translation: "планируют" },
+      invest: { ipa: "ɪnˈvɛst", translation: "инвестировать" },
+      years: { ipa: "jɪəz", translation: "годы" },
+      to: { ipa: "tə", translation: "" },
+      come: { ipa: "kʌm", translation: "вперёд" },
+      books: { ipa: "bʊks", translation: "книги" },
+      blogs: { ipa: "blɒɡz", translation: "блоги" },
+      about: { ipa: "əˈbaʊt", translation: "о" },
+      how: { ipa: "haʊ", translation: "как" },
+      spot: { ipa: "spɒt", translation: "заметить" },
+      new: { ipa: "njuː", translation: "новые" },
+      investment: { ipa: "ɪnˈvɛstmənt", translation: "инвестиции" },
+      trends: { ipa: "trɛndz", translation: "тренды" },
+      point: { ipa: "pɔɪnt", translation: "указывать" },
+      toward: { ipa: "təˈwɔːd", translation: "к" },
+      past: { ipa: "pɑːst", translation: "прошлому" },
+      many: { ipa: "ˈmɛni", translation: "многие" },
+      stock: { ipa: "stɒk", translation: "биржевые" },
+      market: { ipa: "ˈmɑːkɪt", translation: "рынок" },
+      from: { ipa: "frɒm", translation: "от" },
+      us: { ipa: "ˌjuːˈɛs", translation: "США" },
+      railroads: { ipa: "ˈreɪlrəʊdz", translation: "железные дороги" },
+      late: { ipa: "leɪt", translation: "позднего" },
+      19th: { ipa: "naɪntiːnθ", translation: "девятнадцатого" },
+      century: { ipa: "ˈsɛnʧəri", translation: "века" },
+      technology: { ipa: "tɛkˈnɒləʤi", translation: "технология" },
+      20th: { ipa: "ˈtwɛntiəθ", translation: "двадцатого" },
+      was: { ipa: "wɒz", translation: "был" },
+      fueled: { ipa: "ˈfjuːəld", translation: "подпитывался" },
+      by: { ipa: "baɪ", translation: "" },
+      substantial: { ipa: "səbˈstænʃəl", translation: "значительными" },
+      hopes: { ipa: "həʊps", translation: "надежды" },
+      big: { ipa: "bɪɡ", translation: "большой" },
+      payback: { ipa: "ˈpeɪbæk", translation: "окупаемость" },
+      themed: { ipa: "θiːmd", translation: "тематические" },
+      capital: { ipa: "ˈkæpɪtl", translation: "капитал" },
+      raising: { ipa: "ˈreɪzɪŋ", translation: "привлечение" },
+      already: { ipa: "ɔːlˈrɛdi", translation: "уже" },
+      here: { ipa: "hɪə", translation: "здесь" },
+      than: { ipa: "ðæn", translation: "чем" },
+      750: { ipa: "ˌsɛvən ˈfɪfti", translation: "семьсот пятьдесят" },
+      funds: { ipa: "fʌndz", translation: "фонды" },
+      exist: { ipa: "ɪɡˈzɪst", translation: "существуют" },
+      capacity: { ipa: "kəˈpæsɪti", translation: "мощность" },
+      tight: { ipa: "taɪt", translation: "ограничена" },
+      energy: { ipa: "ˈɛnəʤi", translation: "энергия" },
+      demand: { ipa: "dɪˈmɑːnd", translation: "спрос" },
+      enormous: { ipa: "ɪˈnɔːməs", translation: "огромный" },
+      data: { ipa: "ˈdeɪtə", translation: "данные" },
+      centers: { ipa: "ˈsɛntəz", translation: "центры" },
+      need: { ipa: "niːd", translation: "нуждаются" },
+      power: { ipa: "ˈpaʊə", translation: "энергия" },
+      cooling: { ipa: "ˈkuːlɪŋ", translation: "охлаждение" },
+      commodity: { ipa: "kəˈmɒdəti", translation: "сырьевые" },
+      chips: { ipa: "ʧɪps", translation: "чипы" },
+      metals: { ipa: "ˈmɛtlz", translation: "металлы" },
+      showing: { ipa: "ˈʃəʊɪŋ", translation: "показывают" },
+      strain: { ipa: "streɪn", translation: "напряжение" },
+      supply: { ipa: "səˈplaɪ", translation: "предложение" },
+      catches: { ipa: "ˈkæʧɪz", translation: "догоняет" },
+      up: { ipa: "ʌp", translation: "" },
+      technology: { ipa: "tɛkˈnɒləʤi", translation: "технологии" },
+      related: { ipa: "rɪˈleɪtɪd", translation: "связанные" },
+      stocks: { ipa: "stɒks", translation: "акции" },
+      may: { ipa: "meɪ", translation: "могут" },
+      red: { ipa: "rɛd", translation: "красные" },
+      flags: { ipa: "flæɡz", translation: "предупреждения" },
+      but: { ipa: "bʌt", translation: "но" },
+      have: { ipa: "hæv", translation: "имеют" },
+      pinkish: { ipa: "ˈpɪŋkɪʃ", translation: "розоватый" },
+      hue: { ipa: "hjuː", translation: "оттенок" },
+      paying: { ipa: "ˈpeɪɪŋ", translation: "обращают" },
+      attention: { ipa: "əˈtɛnʃən", translation: "внимание" },
+      even: { ipa: "ˈiːvən", translation: "даже" },
+      nvidias: { ipa: "ɛnˈvɪdiə(z)", translation: "Nvidia" },
+      balance: { ipa: "ˈbæləns", translation: "баланс" },
+      sheet: { ipa: "ʃiːt", translation: "баланс" },
+      under: { ipa: "ˈʌndə", translation: "под" },
+      pressure: { ipa: "ˈprɛʃə", translation: "давлением" },
+      because: { ipa: "bɪˈkɒz", translation: "потому что" },
+      previously: { ipa: "ˈpriːviəsli", translation: "ранее" },
+      copious: { ipa: "ˈkəʊpiəs", translation: "обильный" },
+      flow: { ipa: "fləʊ", translation: "поток" },
+      narrowing: { ipa: "ˈnærəʊɪŋ", translation: "сужается" },
+      some: { ipa: "sʌm", translation: "некоторые" },
+      analysts: { ipa: "ˈænəlɪsts", translation: "аналитики" },
+      warn: { ipa: "wɔːn", translation: "предупреждают" },
+      that: { ipa: "ðæt", translation: "что" },
+      profits: { ipa: "ˈprɒfɪts", translation: "прибыли" },
+      disappoint: { ipa: "ˌdɪsəˈpɔɪnt", translation: "разочаровывают" },
+      when: { ipa: "wɛn", translation: "когда" },
+      availability: { ipa: "əˌveɪləˈbɪləti", translation: "доступность" },
+      limited: { ipa: "ˈlɪmɪtɪd", translation: "ограничена" },
+      others: { ipa: "ˈʌðəz", translation: "другие" },
+      argue: { ipa: "ˈɑːgjuː", translation: "возражают" },
+      settlements: { ipa: "ˈsɛtlmənts", translation: "соглашения" },
+      suppliers: { ipa: "səˈplaɪəz", translation: "поставщики" },
+      could: { ipa: "kʊd", translation: "могут" },
+      ease: { ipa: "iːz", translation: "смягчить" },
+      worries: { ipa: "ˈwʌriz", translation: "опасения" },
+      yet: { ipa: "jɛt", translation: "всё же" },
+      lingering: { ipa: "ˈlɪŋɡərɪŋ", translation: "затяжное" },
+      disquiet: { ipa: "dɪsˈkwaɪət", translation: "беспокойство" },
+      remains: { ipa: "rɪˈmeɪnz", translation: "остается" },
+      meanwhile: { ipa: "ˈmiːnˌwaɪl", translation: "тем временем" },
+      governments: { ipa: "ˈɡʌvənmənts", translation: "правительства" },
+      launching: { ipa: "ˈlɔːnʧɪŋ", translation: "запускают" },
+      opaque: { ipa: "əʊˈpeɪk", translation: "непрозрачные" },
+      means: { ipa: "miːnz", translation: "способы" },
+      persuade: { ipa: "pəˈsweɪd", translation: "убеждать" },
+      keep: { ipa: "kiːp", translation: "сохранять" },
+      funding: { ipa: "ˈfʌndɪŋ", translation: "финансирование" },
+      wave: { ipa: "weɪv", translation: "волну" },
+      lack: { ipa: "læk", translation: "отсутствие" },
+      interest: { ipa: "ˈɪntrɪst", translation: "интерес" },
+      would: { ipa: "wʊd", translation: "могло бы" },
+      inevitably: { ipa: "ɪnˈɛvɪtəbli", translation: "неизбежно" },
+      force: { ipa: "fɔːs", translation: "заставить" },
+      projects: { ipa: "ˈprɒʤɛkts", translation: "проекты" },
+      slow: { ipa: "sləʊ", translation: "замедлиться" },
+      future: { ipa: "ˈfjuːʧə", translation: "будущее" },
+      understood: { ipa: "ˌʌndəˈstʊd", translation: "понято" },
+      by: { ipa: "baɪ", translation: "через" },
+      knowing: { ipa: "ˈnəʊɪŋ", translation: "знание" },
+      history: { ipa: "ˈhɪstəri", translation: "история" },
+      markets: { ipa: "ˈmɑːkɪts", translation: "рынки" },
+      draws: { ipa: "drɔːz", translation: "подходит" },
+      close: { ipa: "kləʊs", translation: "к концу" },
+      modest: { ipa: "ˈmɒdɪst", translation: "скромен" },
+      profits: { ipa: "ˈprɒfɪts", translation: "прибыли" },
+      disappoint: { ipa: "ˌdɪsəˈpɔɪnt", translation: "разочаровывают" },
+      inevitably: { ipa: "ɪnˈɛvɪtəbli", translation: "неизбежно" },
+      previously: { ipa: "ˈpriːviəsli", translation: "раньше" },
+      copious: { ipa: "ˈkəʊpiəs", translation: "обильный" },
+      opaque: { ipa: "əʊˈpeɪk", translation: "непрозрачный" },
+      strain: { ipa: "streɪn", translation: "напряжение" },
+      hue: { ipa: "hjuː", translation: "оттенок" },
+      deceptive: { ipa: "dɪˈsɛptɪv", translation: "обманчивый" },
+      lingering: { ipa: "ˈlɪŋgərɪŋ", translation: "затяжной" },
+      disquiet: { ipa: "dɪsˈkwaɪət", translation: "беспокойство" },
+      settlements: { ipa: "ˈsɛtlmənts", translation: "урегулирования" },
+      ease: { ipa: "iːz", translation: "ослабить" },
+      worries: { ipa: "ˈwʌriz", translation: "беспокойства" },
+      lack: { ipa: "læk", translation: "недостаток" },
+      commodity: { ipa: "kəˈmɒdəti", translation: "товарные" },
+      persuade: { ipa: "pəˈsweɪd", translation: "убедить" },
+    };
+
+    const importantPhrases = [
+      { text: "draws to a close", ipa: "drɔːz tə ə kləʊs", translation: "подходит к концу" },
+      { text: "point toward", ipa: "pɔɪnt təˈwɔːd", translation: "указывать на" },
+      { text: "investment is modest", ipa: "ɪnˈvɛstmənt ɪz ˈmɒdɪst", translation: "инвестиции скромные" },
+      { text: "substantial investment", ipa: "səbˈstænʃəl ɪnˈvɛstmənt", translation: "значительные инвестиции" },
+      { text: "profits disappoint", ipa: "ˈprɒfɪts ˌdɪsəˈpɔɪnt", translation: "прибыли разочаровывают" },
+      { text: "inevitably", ipa: "ɪnˈɛvɪtəbli", translation: "неизбежно" },
+      { text: "previously copious", ipa: "ˈpriːviəsli ˈkəʊpiəs", translation: "раньше обильный" },
+      { text: "opaque means", ipa: "əʊˈpeɪk miːnz", translation: "непрозрачные способы" },
+      { text: "showing strain", ipa: "ˈʃəʊɪŋ streɪn", translation: "демонстрируют напряжение" },
+      { text: "a pinkish hue", ipa: "ə ˈpɪŋkɪʃ hjuː", translation: "розоватый оттенок" },
+      { text: "this is deceptive", ipa: "ðɪs ɪz dɪˈsɛptɪv", translation: "это обманчиво" },
+      { text: "lingering disquiet", ipa: "ˈlɪŋɡərɪŋ dɪsˈkwaɪət", translation: "длительное беспокойство" },
+      { text: "settlements could ease worries", ipa: "ˈsɛtlmənts kʊd iːz ˈwʌriz", translation: "урегулирования могли бы ослабить беспокойства" },
+      { text: "lack of interest", ipa: "læk əv ˈɪntrɪst", translation: "отсутствие интереса" },
+      { text: "commodity prices", ipa: "kəˈmɒdəti ˈpraɪsɪz", translation: "цены на сырьё" },
+      { text: "persuade investors", ipa: "pəˈsweɪd ɪnˈvɛstəz", translation: "убеждать инвесторов" },
+    ];
+
+    const paragraphs = [
+      "The debate over whether the artificial intelligence spending boom is a bubble continues to rumble. Microsoft and OpenAI are reportedly preparing for flotations with price tags in the hundreds of billions of dollars. Only the so-called Magnificent Seven, whose share prices are the backbone of all things AI, are not yet rushing to sell more stock even though they plan to invest in AI for years to come.",
+      "Books and blogs about how to spot new investment trends point toward the past. Many a stock market boom, from US railroads in the late 19th century to technology in the late 20th, was fueled by substantial investment and hopes of big payback. AI-themed capital raising is already here: more than 750 funds exist, capacity is tight, and energy demand is enormous. Data centers need power and cooling, and commodity prices for chips and metals are showing strain as supply catches up.",
+      "Technology and AI-related stocks may not be red flags, but they have a pinkish hue — and investors are paying attention.",
+      "Even Nvidia’s balance sheet is under pressure because the previously copious flow of chips is narrowing. Some analysts warn that profits disappoint when availability is limited. Others argue that settlements with suppliers could ease worries, yet lingering disquiet remains. Meanwhile, governments are launching opaque means to persuade investors to keep funding the wave, but lack of interest would inevitably force projects to slow."
+    ];
+
+    function normalizeWord(raw) {
+      return raw
+        .toLowerCase()
+        .replace(/’/g, "'")
+        .replace(/[^a-z'0-9]/g, '');
+    }
+
+    function getWordData(raw) {
+      const key = normalizeWord(raw);
+      if (translationMap[key]) return { key, ...translationMap[key] };
+      return { key, ipa: `/${key || raw}/`, translation: raw };
+    }
+
+    function speak(text) {
+      if (!('speechSynthesis' in window)) return;
+      const utterance = new SpeechSynthesisUtterance(text.replace(/’/g, "'"));
+      utterance.lang = 'en-US';
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function updatePanel(word, ipa, translation) {
+      document.getElementById('panel-word').textContent = word;
+      document.getElementById('panel-ipa').textContent = ipa;
+      document.getElementById('panel-translation').textContent = translation;
+    }
+
+    function makeWordButton(token) {
+      const { ipa, translation } = getWordData(token);
+      const button = document.createElement('button');
+      button.className = 'word-button';
+      button.type = 'button';
+      button.textContent = token;
+      const sound = document.createElement('span');
+      sound.className = 'speaker';
+      sound.setAttribute('aria-hidden', 'true');
+      sound.textContent = '🔊';
+      button.appendChild(sound);
+      button.addEventListener('click', () => {
+        speak(token);
+        updatePanel(token, ipa, translation);
+      });
+      return button;
+    }
+
+    function renderArticle() {
+      const container = document.getElementById('article');
+      paragraphs.forEach((text) => {
+        const paragraphEl = document.createElement('p');
+        paragraphEl.className = 'paragraph';
+        const segments = text.split(/(\s+)/);
+        segments.forEach((segment) => {
+          if (/^\s+$/.test(segment)) {
+            paragraphEl.append(segment);
+            return;
+          }
+          const match = segment.match(/^([A-Za-z’']+)([^A-Za-z’']*)$/);
+          if (match) {
+            const [_, word, punctuation] = match;
+            paragraphEl.appendChild(makeWordButton(word));
+            if (punctuation) paragraphEl.append(punctuation);
+          } else {
+            paragraphEl.append(segment);
+          }
+        });
+        container.appendChild(paragraphEl);
+      });
+    }
+
+    function renderKeywords() {
+      const list = document.getElementById('keywords');
+      importantPhrases.forEach((phrase) => {
+        const li = document.createElement('li');
+        const button = document.createElement('button');
+        button.className = 'keyword-button';
+        button.type = 'button';
+        button.innerHTML = `<span class="keyword-text">${phrase.text}</span><span class="keyword-meta">${phrase.ipa} · ${phrase.translation}</span>`;
+        button.addEventListener('click', () => {
+          speak(phrase.text);
+          updatePanel(phrase.text, phrase.ipa, phrase.translation);
+        });
+        li.appendChild(button);
+        list.appendChild(li);
+      });
+    }
+
+    renderArticle();
+    renderKeywords();
+  </script>
+</body>
+</html>
